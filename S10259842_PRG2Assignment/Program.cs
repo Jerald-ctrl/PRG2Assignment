@@ -1,9 +1,36 @@
-﻿namespace S10259842_PRG2Assignment
+﻿//==========================================================
+// Student Number : S10259305
+// Student Name : Keagan Alexander Sng Yu
+// Partner Name : Jerald Tee Li Yi
+//==========================================================
+
+namespace S10259842_PRG2Assignment
 {
     class Program
     {
 
-        static void DisplayMenu() //Displays the menu every iteration
+        
+
+        static void Main(string[] args)
+        {
+           void DisplayCustomers()
+            {
+                using (StreamReader cReader = new StreamReader("customers.csv"))
+                {
+                    string[] headers = cReader.ReadLine().Split(",");
+                    Console.WriteLine($"{headers[0],-12} {headers[1],-12} {headers[2],-12} {headers[3],-20} {headers[4],-20} {headers[5],-12}");
+
+                    string ? line;
+                    while ((line = cReader.ReadLine()) != null)
+                    {
+                        string[] cInfo = line.Split(",");
+                        Console.WriteLine($"{cInfo[0], -12} {cInfo[1],-12} {cInfo[2],-12} {cInfo[3],-20} {cInfo[4],-20} {cInfo[5],-12}");
+                    }
+                }
+            }
+          
+          
+           void DisplayMenu() //Displays the menu every iteration
         {
             Console.Write("" +
                 "------------- MENU --------------\r\n" +
@@ -18,44 +45,44 @@
                 "Enter your option: ");
         }
 
-        static void ListAllCustomers()
+         void ListAllCustomers()
         {
 
         }
 
-        static void ListAllCurrentOrders()
+         void ListAllCurrentOrders()
         {
 
         }
 
-        static void RegisterCustomer()
+         void RegisterCustomer()
         {
 
         }
 
-        static void CreateCustomerOrder()
+         void CreateCustomerOrder()
         {
 
         }
 
-        static void DisplayOrderDetails()
+         void DisplayOrderDetails()
         {
 
         }
 
-        static void ModifyOrderDetails()
+         void ModifyOrderDetails()
         {
 
         }
 
-
-        static void Main(string[] args)
-        {
-            Console.WriteLine("I have edited this!");
+          
+          
+         
             // Testing
             string choice = "";
             while (true)
             {
+                DisplayCustomers();
                 DisplayMenu();
                 choice = Console.ReadLine();
                 if (choice == "1")
@@ -92,9 +119,6 @@
                 }
 
             }
-
-
-
         }
     }
-}
+        
