@@ -9,75 +9,75 @@ namespace S10259842_PRG2Assignment
     class Program
     {
 
-        
+
 
         static void Main(string[] args)
         {
-           void DisplayCustomers()
+            void DisplayCustomers()
             {
                 using (StreamReader cReader = new StreamReader("customers.csv"))
                 {
                     string[] headers = cReader.ReadLine().Split(",");
                     Console.WriteLine($"{headers[0],-12} {headers[1],-12} {headers[2],-12} {headers[3],-20} {headers[4],-20} {headers[5],-12}");
 
-                    string ? line;
+                    string? line;
                     while ((line = cReader.ReadLine()) != null)
                     {
                         string[] cInfo = line.Split(",");
-                        Console.WriteLine($"{cInfo[0], -12} {cInfo[1],-12} {cInfo[2],-12} {cInfo[3],-20} {cInfo[4],-20} {cInfo[5],-12}");
+                        Console.WriteLine($"{cInfo[0],-12} {cInfo[1],-12} {cInfo[2],-12} {cInfo[3],-20} {cInfo[4],-20} {cInfo[5],-12}");
                     }
                 }
             }
-          
-          
-           void DisplayMenu() //Displays the menu every iteration
-        {
-            Console.Write("" +
-                "------------- MENU --------------\r\n" +
-                "[1] List All Customers\r\n" +
-                "[2] List all current orders\r\n" +
-                "[3] Register a new customer\r\n" +
-                "[4] Create a customer’s order\r\n" +
-                "[5] Display order details of a customer\r\n" +
-                "[6] Modify order details\r\n" +
-                "[0] Exit\r\n" +
-                "---------------------------------\r\n" +
-                "Enter your option: ");
-        }
 
-         void ListAllCustomers()
-        {
 
-        }
+            void DisplayMenu() //Displays the menu every iteration
+            {
+                Console.Write("" +
+                    "------------- MENU --------------\r\n" +
+                    "[1] List All Customers\r\n" +
+                    "[2] List all current orders\r\n" +
+                    "[3] Register a new customer\r\n" +
+                    "[4] Create a customer’s order\r\n" +
+                    "[5] Display order details of a customer\r\n" +
+                    "[6] Modify order details\r\n" +
+                    "[0] Exit\r\n" +
+                    "---------------------------------\r\n" +
+                    "Enter your option: ");
+            }
 
-         void ListAllCurrentOrders()
-        {
+            void ListAllCustomers()
+            {
 
-        }
+            }
 
-         void RegisterCustomer()
-        {
+            void ListAllCurrentOrders()
+            {
 
-        }
+            }
 
-         void CreateCustomerOrder()
-        {
+            void RegisterCustomer()
+            {
 
-        }
+            }
 
-         void DisplayOrderDetails()
-        {
+            void CreateCustomerOrder()
+            {
 
-        }
+            }
 
-         void ModifyOrderDetails()
-        {
+            void DisplayOrderDetails()
+            {
 
-        }
+            }
 
-          
-          
-         
+            void ModifyOrderDetails()
+            {
+
+            }
+
+
+
+
             // Testing
             string choice = "";
             while (true)
@@ -120,5 +120,6 @@ namespace S10259842_PRG2Assignment
 
             }
         }
-    }
+    } 
+}
         
