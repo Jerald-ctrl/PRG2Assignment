@@ -50,8 +50,50 @@ namespace S10259842_PRG2Assignment
 
             }
 
-            void ListAllCurrentOrders()
+            void DisplayOrder(Order order) // Function to display all information about an order, used for Q2, Q5
             {
+                Console.WriteLine("Order Id:" + order.Id);
+                Console.WriteLine($"Time Received: {order.TimeReceived}");
+                if (order.TimeFulfilled == null)
+                {
+                    Console.WriteLine("Order is currently not fulfilled.");
+                }
+                else
+                {
+                    Console.WriteLine($"Time fulfilled: {order.TimeFulfilled}");
+                }
+
+            }
+
+            void ListAllCurrentOrders(Queue<Order> regularQueue, Queue<Order> goldenQueue)
+            {
+                if (goldenQueue.Count == 0)
+                {
+                    Console.WriteLine("There are no orders in the golden queue.");
+                }
+                else
+                { 
+                    Console.WriteLine("Golden queue: \r\n" + "--------------");
+                    foreach (Order order in goldenQueue)
+                    {
+                       DisplayOrder(order);
+
+                    }
+
+                }
+                if (regularQueue.Count == 0)
+                {
+                    Console.WriteLine("There are no orders in the regular queue.");
+                }
+                else
+                {
+                    Console.WriteLine("Regular queue: \r\n" + "--------------");
+                    foreach (Order order in goldenQueue)
+                    {
+                        DisplayOrder(order);
+                    }
+                }
+                
 
             }
 
@@ -75,41 +117,46 @@ namespace S10259842_PRG2Assignment
 
             }
 
-
+            //setup code
+            Queue<Order> regularQueue = new Queue<Order>();
+            Queue<Order> goldenQueue = new Queue<Order>();
 
 
             // Testing
             string choice = "";
-            while (true)
+            DisplayCustomers(); 
+
+
+            while (true) // Main loop 
             {
-                DisplayCustomers();
+                
                 DisplayMenu();
                 choice = Console.ReadLine();
-                if (choice == "1")
+                if (choice == "1") //if else conditions (with validation) to ensure valid inputs are given.
                 {
                     ListAllCustomers();
                 }
-                if (choice == "2")
+                else if (choice == "2")
                 {
-                    ListAllCurrentOrders();
+                    ListAllCurrentOrders(regularQueue, goldenQueue);
                 }
-                if (choice == "3")
+                else if (choice == "3")
                 {
                     RegisterCustomer();
                 }
-                if (choice == "4")
+                else if (choice == "4")
                 {
                     CreateCustomerOrder();
                 }
-                if (choice == "5")
+                else if (choice == "5")
                 {
                     DisplayOrderDetails();
                 }
-                if (choice == "6")
+                else if (choice == "6")
                 {
                     ModifyOrderDetails();
                 }
-                if (choice == "0")
+                else if (choice == "0")
                 {
                     break;
                 }

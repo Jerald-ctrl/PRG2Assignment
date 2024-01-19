@@ -10,7 +10,7 @@ namespace S10259842_PRG2Assignment
     {
         private int id;
         private DateTime timeReceived;
-        private DateTime? timeFulfilled;
+        private DateTime? timeFulfilled = null; 
         private List<IceCream> iceCreamList = new List<IceCream>();
 
 
@@ -18,10 +18,53 @@ namespace S10259842_PRG2Assignment
         { get { return id; } set { id = value; } }
 
         public DateTime TimeReceived
-        { get { return timeReceived; } set {  timeReceived = value; } } 
+        { get { return timeReceived; } set { timeReceived = value; } }
 
         public DateTime? TimeFulfilled
-        { get { return timeFulfilled; } set { timeFulfilled = value; } } 
+        { get { return timeFulfilled; } set { timeFulfilled = value; } }
+
+
+        public Order()
+            {
+            }
+
+        public Order(int id, DateTime time)
+        {
+            Id = id;
+            timeReceived = time;
+        }
+
+        public void  ModifyIceCream(int id)
+        {
+
+        }
+
+        public void AddIceCream(IceCream iceCream)
+        {
+            iceCreamList.Add(iceCream);
+        }
+
+        public void DeleteIceCream(int index) 
+        {
+            iceCreamList.RemoveAt(index);
+        }
+
+        public double CalculateTotal()
+        {
+            double total = 0;
+            foreach (IceCream iceCream in iceCreamList)
+            {
+                total += iceCream.CalculatePrice();
+            }
+            return total;
+        }
+
+        public override string ToString()
+        {
+            return "";
+        }
+
+
 
 
     }
