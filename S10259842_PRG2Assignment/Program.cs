@@ -4,112 +4,169 @@
 // Partner Name : Jerald Tee Li Yi
 //==========================================================
 
+using System.Text.RegularExpressions;
+
 namespace S10259842_PRG2Assignment
 {
     class Program
     {
-
-        
-
         static void Main(string[] args)
         {
-           void DisplayCustomers()
+            List<Customer> customerList = new List<Customer>();
+
+            void DisplayMenu() //Displays the menu every iteration
+            {
+                Console.Write("" +
+                    "------------- MENU --------------\r\n" +
+                    "[1] List All Customers\r\n" +
+                    "[2] List all current orders\r\n" +
+                    "[3] Register a new customer\r\n" +
+                    "[4] Create a customer’s order\r\n" +
+                    "[5] Display order details of a customer\r\n" +
+                    "[6] Modify order details\r\n" +
+                    "[0] Exit\r\n" +
+                    "---------------------------------\r\n" +
+                    "Enter your option: ");
+            }
+
+            void ListAllCustomers() //basic feature 1 (Keagan)
             {
                 using (StreamReader cReader = new StreamReader("customers.csv"))
                 {
                     string[] headers = cReader.ReadLine().Split(",");
-                    Console.WriteLine($"{headers[0],-12} {headers[1],-12} {headers[2],-12} {headers[3],-20} {headers[4],-20} {headers[5],-12}");
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Console.Write($"{headers[i],-12}");
+                    }
+                    Console.WriteLine();
 
-                    string ? line;
+                    string? line;
                     while ((line = cReader.ReadLine()) != null)
                     {
                         string[] cInfo = line.Split(",");
-                        Console.WriteLine($"{cInfo[0], -12} {cInfo[1],-12} {cInfo[2],-12} {cInfo[3],-20} {cInfo[4],-20} {cInfo[5],-12}");
+                        //Customer customer = new Customer(cInfo[0], Convert.ToInt32(cInfo[1]), Convert.ToDateTime(cInfo[2]));
+                        //customerList.Add(customer);
+                        //Console.WriteLine($"{cInfo[0],-12} {cInfo[1],-12} {cInfo[2],-12} {cInfo[3],-20} {cInfo[4],-20} {cInfo[5],-12}");
+                    }
+                    cReader.Close();
+                }
+
+                foreach (Customer c in customerList)
+                {
+                    Console.WriteLine(c);
+                }
+            }
+
+            void ListAllCurrentOrders() //basic feature 2 (Jerald)
+            {
+
+            }
+
+            void RegisterCustomer() //basic feature 3 (Keagan)
+            {
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Enter name: ");
+                        string? newName = Console.ReadLine();
+
+                        if (newName.Any(char.IsNumber) || newName.Any(char.IsSymbol))
+                        {
+                            Console.WriteLine("Invalid name. Please try again. ");
+                            continue;
+                        }
+
+                        Console.Write("Enter ID: ");
+                        int newID = Convert.ToInt32(Console.ReadLine());
+
+                        Console.Write("Enter Date of Birth (DD/MM/YYYY): ");
+                        string? date = Console.ReadLine();
+
+                        //Regex dateFormat = new Regex("(?<date>[^@]+)/(?<month>[^@]+)/?<year>[^@]+");
+                        Regex dateFormat = new Regex(@"^(\d{1})/(\d{1})/(\d{1})$");
+                        Match dateMatch = dateFormat.Match(date);
+
+                        DateTime newDOB = DateTime.Today;
+                        if (dateMatch.Success)
+                        {
+                            newDOB = Convert.ToDateTime(date);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Date of Birth was not in correct format DD/MM/YYYY. Please try again. ");
+                            continue;
+                        }
+
+                        //can only be implemented after Customer class is fully complete
+                        /*Customer newCustomer = new Customer(newName, newID, newDOB);
+                        PointCard newCard = new PointCard();
+                        newCustomer.Rewards = newCard;*/
+                        using (StreamWriter cWriter = new StreamWriter("customers.csv"))
+                        {
+                            cWriter.WriteLine(newName,newID,newDOB,"Ordinary",0,0);
+                            cWriter.Close();
+                        }
+
+                        break;
+                    }
+
+                    catch (FormatException f)
+                    {
+                        Console.WriteLine($"{f.Message}");
                     }
                 }
             }
-          
-          
-           void DisplayMenu() //Displays the menu every iteration
-        {
-            Console.Write("" +
-                "------------- MENU --------------\r\n" +
-                "[1] List All Customers\r\n" +
-                "[2] List all current orders\r\n" +
-                "[3] Register a new customer\r\n" +
-                "[4] Create a customer’s order\r\n" +
-                "[5] Display order details of a customer\r\n" +
-                "[6] Modify order details\r\n" +
-                "[0] Exit\r\n" +
-                "---------------------------------\r\n" +
-                "Enter your option: ");
-        }
 
-         void ListAllCustomers()
-        {
+            void CreateCustomerOrder() //basic feature 4 (Keagan)
+            {
 
-        }
+            }
 
-         void ListAllCurrentOrders()
-        {
+            void DisplayOrderDetails() //basic feature 5 (Jerald)
+            {
 
-        }
+            }
 
-         void RegisterCustomer()
-        {
+            void ModifyOrderDetails() //basic feature 6 (Jerald)
+            {
 
-        }
+            }
 
-         void CreateCustomerOrder()
-        {
 
-        }
 
-         void DisplayOrderDetails()
-        {
 
-        }
-
-         void ModifyOrderDetails()
-        {
-
-        }
-
-          
-          
-         
             // Testing
             string choice = "";
             while (true)
             {
-                DisplayCustomers();
                 DisplayMenu();
                 choice = Console.ReadLine();
                 if (choice == "1")
                 {
                     ListAllCustomers();
                 }
-                if (choice == "2")
+                else if (choice == "2")
                 {
                     ListAllCurrentOrders();
                 }
-                if (choice == "3")
+                else if(choice == "3")
                 {
                     RegisterCustomer();
                 }
-                if (choice == "4")
+                else if(choice == "4")
                 {
                     CreateCustomerOrder();
                 }
-                if (choice == "5")
+                else if(choice == "5")
                 {
                     DisplayOrderDetails();
                 }
-                if (choice == "6")
+                else if(choice == "6")
                 {
                     ModifyOrderDetails();
                 }
-                if (choice == "0")
+                else if (choice == "0")
                 {
                     break;
                 }
@@ -121,4 +178,5 @@ namespace S10259842_PRG2Assignment
             }
         }
     }
+}
         
