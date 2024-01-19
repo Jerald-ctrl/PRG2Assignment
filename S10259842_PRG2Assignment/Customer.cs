@@ -19,17 +19,29 @@ namespace S10259842_PRG2Assignment
         private PointCard rewards;
 
         public string? Name
-        { get { return name; } set { name = value; } }
+        { 
+            get { return name; } 
+            set { name = value; } 
+        }
 
         public int MemberId
-        { get { return memberId; } set {  memberId = value; } }
+        { 
+            get { return memberId; } 
+            set {  memberId = value; } 
+        }
 
         public DateTime Dob
-        { get { return dob; } set {  dob = value; } }
+        { 
+            get { return dob; } 
+            set {  dob = value; } 
+        }
 
 
         public Order CurrentOrder
-        { get { return currentOrder; } set { currentOrder = value; } }
+        { 
+            get { return currentOrder; } 
+            set { currentOrder = value; } 
+        }
 
 
     }
