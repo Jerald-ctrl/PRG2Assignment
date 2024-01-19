@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace S10259842_PRG2Assignment
 {
-    internal class Customer
+    class Customer
     {
-        private string name;
+        private string? name;
         private int memberId;
         private DateTime dob;
         private Order currentOrder;
         public List<Order> orderHistory = new List<Order>();
         public PointCard rewards = new PointCard();
 
-        public string Name
+        public string? Name
         { get { return name; } set { name = value; } }
 
         public int MemberId
