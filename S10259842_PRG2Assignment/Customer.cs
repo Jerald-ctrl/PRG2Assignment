@@ -11,29 +11,29 @@ namespace S10259842_PRG2Assignment
 {
     class Customer
     {
-        private string? name;
-        private int memberId;
-        private DateTime dob;
-        private Order currentOrder;
+        private string? name = null;
+        private int memberId = 0;
+        private DateTime dob = DateTime.Today;
+        private Order currentOrder = new Order();
         private List<Order> orderHistory = new List<Order>();
-        private PointCard rewards;
+        private PointCard rewards = new PointCard();
 
         public string? Name
-        { 
-            get { return name; } 
-            set { name = value; } 
+        {
+            get { return name; }
+            set { name = value; }
         }
 
         public int MemberId
-        { 
-            get { return memberId; } 
-            set {  memberId = value; } 
+        {
+            get { return memberId; }
+            set { memberId = value; }
         }
 
         public DateTime Dob
-        { 
-            get { return dob; } 
-            set {  dob = value; } 
+        {
+            get { return dob; }
+            set { dob = value; }
         }
 
         public List<Order> OrderHistory
@@ -50,11 +50,46 @@ namespace S10259842_PRG2Assignment
 
 
         public Order CurrentOrder
-        { 
-            get { return currentOrder; } 
-            set { currentOrder = value; } 
+        {
+            get { return currentOrder; }
+            set { currentOrder = value; }
         }
 
+        public Customer()
+        { }
 
+        public Customer(string name, int memberId, DateTime dob)
+        {
+
+            Name = name;
+            MemberId = memberId;
+            Dob = dob;
+
+
+
+        }
+
+        public Order MakeOrder()
+
+        {
+            CurrentOrder = new Order();
+            orderHistory.Add(CurrentOrder);
+            return CurrentOrder;
+
+
+        }
+
+        public bool IsBirthday()
+        {
+            if (dob == DateTime.Today)
+            {
+                return true;
+
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

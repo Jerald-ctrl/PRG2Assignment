@@ -60,9 +60,36 @@ namespace S10259842_PRG2Assignment
                 }
             }
 
-            void ListAllCurrentOrders() //basic feature 2 (Jerald)
+            void ListAllCurrentOrders(Queue<Order> regularQueue, Queue<Order> goldenQueue) //basic feature 2 (Jerald)
+            {
+                if (goldenQueue.Count == 0)
+                {
+                    Console.WriteLine("There are no orders in the golden queue.");
+                }
+                else
+                {
+                    Console.WriteLine("Golden queue: \r\n" + "--------------");
+                    foreach (Order order in goldenQueue)
+                    {
+                        DisplayOrder(order);
 
+                    }
 
+                }
+                if (regularQueue.Count == 0)
+                {
+                    Console.WriteLine("There are no orders in the regular queue.");
+                }
+                else
+                {
+                    Console.WriteLine("Regular queue: \r\n" + "--------------");
+                    foreach (Order order in goldenQueue)
+                    {
+                        DisplayOrder(order);
+                    }
+                }
+
+            }
 
             void DisplayOrder(Order order) // Function to display all information about an order, used for Q2, Q5
             {
@@ -93,84 +120,39 @@ namespace S10259842_PRG2Assignment
                             Console.WriteLine("Invalid name. Please try again. ");
                             continue;
                         }
-            void DisplayOrder(Order order) // Function to display all information about an order, used for Q2, Q5
-            {
-                Console.WriteLine("Order Id:" + order.Id);
-                Console.WriteLine($"Time Received: {order.TimeReceived}");
-                if (order.TimeFulfilled == null)
-                {
-                    Console.WriteLine("Order is currently not fulfilled.");
-                }
-                else
-                {
-                    Console.WriteLine($"Time fulfilled: {order.TimeFulfilled}");
-                }
+                            Console.Write("Enter ID: ");
+                            int newID = Convert.ToInt32(Console.ReadLine());
 
-            }
+                            Console.Write("Enter Date of Birth (DD/MM/YYYY): ");
+                            string? date = Console.ReadLine();
 
-            void ListAllCurrentOrders(Queue<Order> regularQueue, Queue<Order> goldenQueue)
-            {
-                if (goldenQueue.Count == 0)
-                {
-                    Console.WriteLine("There are no orders in the golden queue.");
-                }
-                else
-                { 
-                    Console.WriteLine("Golden queue: \r\n" + "--------------");
-                    foreach (Order order in goldenQueue)
-                    {
-                       DisplayOrder(order);
+                            //Regex dateFormat = new Regex("(?<date>[^@]+)/(?<month>[^@]+)/?<year>[^@]+");
+                            Regex dateFormat = new Regex(@"^(\d{1})/(\d{1})/(\d{1})$");
+                            Match dateMatch = dateFormat.Match(date);
 
-                    }
+                            DateTime newDOB = DateTime.Today;
+                            if (dateMatch.Success)
+                            {
+                                newDOB = Convert.ToDateTime(date);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Date of Birth was not in correct format DD/MM/YYYY. Please try again. ");
+                                continue;
+                            }
 
-                }
-                if (regularQueue.Count == 0)
-                {
-                    Console.WriteLine("There are no orders in the regular queue.");
-                }
-                else
-                {
-                    Console.WriteLine("Regular queue: \r\n" + "--------------");
-                    foreach (Order order in goldenQueue)
-                    {
-                        DisplayOrder(order);
-                    }
-                }
-                
+                            //can only be implemented after Customer class is fully complete
+                            Customer newCustomer = new Customer(newName, newID, newDOB);
+                            PointCard newCard = new PointCard();
+                            newCustomer.Rewards = newCard;
+                            using (StreamWriter cWriter = new StreamWriter("customers.csv"))
+                            {
+                                cWriter.WriteLine(newName, newID, newDOB, "Ordinary", 0, 0);
+                                cWriter.Close();
+                            }
 
-                        Console.Write("Enter ID: ");
-                        int newID = Convert.ToInt32(Console.ReadLine());
-
-                        Console.Write("Enter Date of Birth (DD/MM/YYYY): ");
-                        string? date = Console.ReadLine();
-
-                        //Regex dateFormat = new Regex("(?<date>[^@]+)/(?<month>[^@]+)/?<year>[^@]+");
-                        Regex dateFormat = new Regex(@"^(\d{1})/(\d{1})/(\d{1})$");
-                        Match dateMatch = dateFormat.Match(date);
-
-                        DateTime newDOB = DateTime.Today;
-                        if (dateMatch.Success)
-                        {
-                            newDOB = Convert.ToDateTime(date);
+                            break;
                         }
-                        else
-                        {
-                            Console.WriteLine("Date of Birth was not in correct format DD/MM/YYYY. Please try again. ");
-                            continue;
-                        }
-
-                        //can only be implemented after Customer class is fully complete
-                        Customer newCustomer = new Customer(newName, newID, newDOB);
-                        PointCard newCard = new PointCard();
-                        newCustomer.Rewards = newCard;
-                        using (StreamWriter cWriter = new StreamWriter("customers.csv"))
-                        {
-                            cWriter.WriteLine(newName,newID,newDOB,"Ordinary",0,0);
-                            cWriter.Close();
-                        }
-
-                        break;
-                    }
 
                     catch (FormatException f)
                     {
@@ -178,7 +160,7 @@ namespace S10259842_PRG2Assignment
                     }
                 }
             }
-
+        
             void CreateCustomerOrder() //basic feature 4 (Keagan)
             {
 
@@ -201,7 +183,7 @@ namespace S10259842_PRG2Assignment
 
             // Testing
             string choice = "";
-            DisplayCustomers(); 
+             
 
 
             while (true) // Main loop 
