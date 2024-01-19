@@ -99,9 +99,9 @@ namespace S10259842_PRG2Assignment
                         }
 
                         //can only be implemented after Customer class is fully complete
-                        /*Customer newCustomer = new Customer(newName, newID, newDOB);
+                        Customer newCustomer = new Customer(newName, newID, newDOB);
                         PointCard newCard = new PointCard();
-                        newCustomer.Rewards = newCard;*/
+                        newCustomer.Rewards = newCard;
                         using (StreamWriter cWriter = new StreamWriter("customers.csv"))
                         {
                             cWriter.WriteLine(newName,newID,newDOB,"Ordinary",0,0);
