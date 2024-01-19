@@ -15,8 +15,8 @@ namespace S10259842_PRG2Assignment
         private int memberId;
         private DateTime dob;
         private Order currentOrder;
-        private List<Order> orderHistory = new List<Order>();
-        private PointCard rewards;
+        public List<Order> orderHistory = new List<Order>();
+        public PointCard rewards = new PointCard();
 
         public string? Name
         { 
@@ -43,6 +43,36 @@ namespace S10259842_PRG2Assignment
             set { currentOrder = value; } 
         }
 
+        public Customer()
+        { }
 
+        public Customer(string name, int memberId, DateTime dob)
+        {
+            Name = name;
+            MemberId = memberId;
+            Dob = dob;
+            
+            
+        }
+
+        public Order MakeOrder()
+        {
+            CurrentOrder = new Order();
+            orderHistory.Add(CurrentOrder);
+            return CurrentOrder;
+        }
+
+        public bool IsBirthday()
+        {
+            if (dob == DateTime.Today)
+            {
+                return true;
+
+            }
+            else 
+            {
+                return false;
+            }
+        }
     }
 }
