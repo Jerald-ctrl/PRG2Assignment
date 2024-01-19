@@ -15,52 +15,46 @@ namespace S10259842_PRG2Assignment
         private int memberId;
         private DateTime dob;
         private Order currentOrder;
-        public List<Order> orderHistory = new List<Order>();
-        public PointCard rewards = new PointCard();
+        private List<Order> orderHistory = new List<Order>();
+        private PointCard rewards;
 
         public string? Name
-        { get { return name; } set { name = value; } }
+        { 
+            get { return name; } 
+            set { name = value; } 
+        }
 
         public int MemberId
-        { get { return memberId; } set {  memberId = value; } }
+        { 
+            get { return memberId; } 
+            set {  memberId = value; } 
+        }
 
         public DateTime Dob
-        { get { return dob; } set {  dob = value; } }
+        { 
+            get { return dob; } 
+            set {  dob = value; } 
+        }
+
+        public List<Order> OrderHistory
+        {
+            get { return orderHistory; }
+            set { orderHistory = value; }
+        }
+
+        public PointCard Rewards
+        {
+            get { return rewards; }
+            set { rewards = value; }
+        }
 
 
         public Order CurrentOrder
-        { get { return currentOrder; } set { currentOrder = value; } }
-
-        public Customer()
-        { }
-
-        public Customer(string name, int memberId, DateTime dob)
-        {
-            Name = name;
-            MemberId = memberId;
-            Dob = dob;
-            
-            
+        { 
+            get { return currentOrder; } 
+            set { currentOrder = value; } 
         }
 
-        public Order MakeOrder()
-        {
-            CurrentOrder = new Order();
-            orderHistory.Add(CurrentOrder);
-            return CurrentOrder;
-        }
 
-        public bool IsBirthday()
-        {
-            if (dob == DateTime.Today)
-            {
-                return true;
-
-            }
-            else 
-            {
-                return false;
-            }
-        }
     }
 }
