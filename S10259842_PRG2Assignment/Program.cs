@@ -168,7 +168,13 @@ namespace S10259842_PRG2Assignment
 
             void DisplayOrderDetails() //basic feature 5 (Jerald)
             {
-
+                // List information about all Customers: ListAllCustomers(); 
+                Console.WriteLine("Select a customer");
+                /* List the customers
+                 prompt user to select a customer and retrieve the selected customer
+                 retrieve all the order objects of the customer, past and current
+                 for each order, display all the details of the order including datetime received, datetime 
+                fulfilled (if applicable) and all ice cream details associated with the order (Modify DisplayOrder so it works) */
             }
 
             void ModifyOrderDetails() //basic feature 6 (Jerald)
