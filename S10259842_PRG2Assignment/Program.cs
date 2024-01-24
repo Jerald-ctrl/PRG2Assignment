@@ -20,7 +20,7 @@ namespace S10259842_PRG2Assignment
             Queue<Order> goldenQueue = new Queue<Order>();
             List<Customer> customerList = new List<Customer>();
 
-
+            /*
             //Code to Test order functions
             Order order1 = new Order(1,DateTime.Now);
             List<Flavour> flavours = new List<Flavour>();
@@ -33,7 +33,7 @@ namespace S10259842_PRG2Assignment
 
             order1.AddIceCream(new Cup("Cup", 1, flavours, toppings));
             order1.ModifyIceCream(1);
-            Console.WriteLine(order1.IceCreamList[1]); 
+            Console.WriteLine(order1.IceCreamList[1]); */
 
             void DisplayMenu() //Displays the menu every iteration
             {
@@ -127,7 +127,8 @@ namespace S10259842_PRG2Assignment
 
             void RegisterCustomer() //basic feature 3 (Keagan)
             {
-                while (true)
+
+                /*while (true)
                 {
                     try
                     {
@@ -177,7 +178,7 @@ namespace S10259842_PRG2Assignment
                     {
                         Console.WriteLine($"{f.Message}");
                     }
-                }
+                }*/
             }
         
             void CreateCustomerOrder() //basic feature 4 (Keagan)
