@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace S10259842_PRG2Assignment
 {
@@ -10,7 +12,7 @@ namespace S10259842_PRG2Assignment
     {
         private int points;
         private int punchCard;
-        private string tier;
+        private string tier = "Regular"; // Placed default value here to give customers a tier simpler.
 
 
         public int Points
@@ -24,18 +26,30 @@ namespace S10259842_PRG2Assignment
 
         public PointCard()
         {
-
+            Points = 0;
+            PunchCard = 0;
         }
 
         public PointCard(int points, int punchCard)
         {
             Points = points;
             PunchCard = punchCard;
+            AddPoints(0); //Give members a tier automatically
         }
 
         public void AddPoints(int pointAdd)
         {
             Points += pointAdd;
+
+            if (Points > 100)
+            {
+                Tier = "Gold";
+            }
+            else if (Points > 50 && Tier != "Gold") 
+            {
+                Tier = "Silver";
+            }
+
         }
 
         public void RedeemPoints(int pointDed)
@@ -49,13 +63,18 @@ namespace S10259842_PRG2Assignment
 
         public void Punch()
         {
-
+            PunchCard += 1;
+            if (PunchCard == 11)
+            {
+                PunchCard = 0;
+            }
         }
 
 
         public override string ToString()
         {
-            return $"Points: {Points}. PunchCard: {PunchCard}. Tier: {Tier}.";
+           
+            return $"{Points,-12} {PunchCard,-12} {Tier,-12}";
         }
 
 
