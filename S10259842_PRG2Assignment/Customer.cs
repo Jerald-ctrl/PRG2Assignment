@@ -73,16 +73,15 @@ namespace S10259842_PRG2Assignment
 
         {
             CurrentOrder = new Order();
-            orderHistory.Add(CurrentOrder);
+            OrderHistory.Add(CurrentOrder);
             return CurrentOrder;
-
 
 
         }
 
         public bool IsBirthday()
         {
-            if (dob == DateTime.Today)
+            if (Dob == DateTime.Today)
             {
                 return true;
 
@@ -95,7 +94,7 @@ namespace S10259842_PRG2Assignment
 
         public override string ToString()
         {
-            return $"{Name,-12} {MemberId,-12} {Dob,-12} {currentOrder,-12} {CurrentOrder,-12} {OrderHistory,-12} {Rewards,-12}";
+            return $"{Name, -12} {MemberId, -14} {Dob,-12:dd/MM/yyyy} ";
         }
     }
 }

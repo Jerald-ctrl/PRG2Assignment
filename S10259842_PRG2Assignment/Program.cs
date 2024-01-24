@@ -21,7 +21,7 @@ namespace S10259842_PRG2Assignment
             List<Customer> customerList = new List<Customer>();
 
 
-            /* Code to Test order functions
+            //Code to Test order functions
             Order order1 = new Order(1,DateTime.Now);
             List<Flavour> flavours = new List<Flavour>();
             flavours.Add(new Flavour("Strawberry",false,1));
@@ -33,7 +33,7 @@ namespace S10259842_PRG2Assignment
 
             order1.AddIceCream(new Cup("Cup", 1, flavours, toppings));
             order1.ModifyIceCream(1);
-            Console.WriteLine(order1.IceCreamList[1]); */
+            Console.WriteLine(order1.IceCreamList[1]); 
 
             void DisplayMenu() //Displays the menu every iteration
             {
