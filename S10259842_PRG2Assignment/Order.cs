@@ -15,17 +15,27 @@ namespace S10259842_PRG2Assignment
 
 
         public int Id
-        { get { return id; } set { id = value; } }
+        { 
+            get { return id; } 
+            set { id = value; }
+        }
 
         public DateTime TimeReceived
-        { get { return timeReceived; } set { timeReceived = value; } }
+        { 
+            get { return timeReceived; } 
+            set { timeReceived = value; } 
+        }
 
         public DateTime? TimeFulfilled
-        { get { return timeFulfilled; } set { timeFulfilled = value; } }
+        { 
+            get { return timeFulfilled; } 
+            set { timeFulfilled = value; } 
+        }
 
 
         public Order()
             {
+
             }
 
         public Order(int id, DateTime time)
@@ -34,7 +44,7 @@ namespace S10259842_PRG2Assignment
             timeReceived = time;
         }
 
-        public void  ModifyIceCream(int id)
+        public void ModifyIceCream(int id)
         {
 
         }
@@ -61,7 +71,12 @@ namespace S10259842_PRG2Assignment
 
         public override string ToString()
         {
-            return "";
+            string? orders = "";
+            foreach (IceCream i in iceCreamList)
+            {
+                orders += i.ToString() + "\n";
+            }
+            return $"{Id, -12} {TimeReceived, -12} {TimeFulfilled, -12} {orders}";
         }
 
 

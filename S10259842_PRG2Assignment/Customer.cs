@@ -11,9 +11,9 @@ namespace S10259842_PRG2Assignment
 {
     class Customer
     {
-        private string? name = null;
-        private int memberId = 0;
-        private DateTime dob = DateTime.Today;
+        private string? name;
+        private int memberId;
+        private DateTime dob;
         private Order currentOrder = new Order();
         private List<Order> orderHistory = new List<Order>();
         private PointCard rewards = new PointCard();
@@ -56,7 +56,11 @@ namespace S10259842_PRG2Assignment
         }
 
         public Customer()
-        { }
+        {
+            Name = null;
+            MemberId = 0;
+            Dob = DateTime.Today;
+        }
 
         public Customer(string name, int memberId, DateTime dob)
         {
@@ -73,7 +77,7 @@ namespace S10259842_PRG2Assignment
 
         {
             CurrentOrder = new Order();
-            orderHistory.Add(CurrentOrder);
+            OrderHistory.Add(CurrentOrder);
             return CurrentOrder;
 
 
@@ -81,7 +85,7 @@ namespace S10259842_PRG2Assignment
 
         public bool IsBirthday()
         {
-            if (dob == DateTime.Today)
+            if (Dob == DateTime.Today)
             {
                 return true;
 
@@ -90,6 +94,11 @@ namespace S10259842_PRG2Assignment
             {
                 return false;
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{Name, -12} {MemberId, -14} {Dob,-12:dd/MM/yyyy} ";
         }
     }
 }

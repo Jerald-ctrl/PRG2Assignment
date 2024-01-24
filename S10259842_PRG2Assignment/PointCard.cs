@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace S10259842_PRG2Assignment
 {
-    internal class PointCard
+    class PointCard
     {
         private int points;
         private int punchCard;
@@ -14,13 +14,22 @@ namespace S10259842_PRG2Assignment
 
 
         public int Points
-        { get { return points; } set { points = value; } }
+        { 
+            get { return points; } 
+            set { points = value; }
+        }
 
         public int PunchCard
-        { get { return punchCard; } set { punchCard = value; } }
+        { 
+            get { return punchCard; } 
+            set { punchCard = value; }
+        }
 
         public string Tier
-        { get { return tier; } set { tier = value; } }
+        { 
+            get { return tier; } 
+            set { tier = value; }
+        }
 
         public PointCard()
         {
