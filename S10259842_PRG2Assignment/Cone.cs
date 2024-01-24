@@ -26,20 +26,17 @@ namespace S10259842_PRG2Assignment
             dipped = false;
         }
 
-        public Cone(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, bool dipped):base(option, scoops, flavours, toppings)
+        public Cone(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, bool dipped):base("Cone", scoops, flavours, toppings)
         {
             Dipped = dipped;
         }
         public override double CalculatePrice()
         {
             double totalPrice = 0;
-            double conePrice = 0;
-            double flavourPrice = 0;
-            double toppingsPrice = 0;
 
-            if (dipped)
+            if (Dipped == true)
             {
-                conePrice += 2;
+                totalPrice += 2;
             }
 
             //calculate price per scoop
@@ -61,22 +58,32 @@ namespace S10259842_PRG2Assignment
             {
                 if (flavour.Premium == true)
                 {
-                    flavourPrice += 2;
+                    totalPrice += 2;
                 }
             }
 
             foreach (Topping topping in Toppings)
             {
-                toppingsPrice += 1;
+                totalPrice += 1;
             }
 
-            totalPrice = totalPrice + conePrice + flavourPrice + toppingsPrice;
             return totalPrice;
         }
 
         public override string ToString()
         {
-            return base.ToString();
+            if (Dipped == true)
+            {
+                return base.ToString() + "Yes";
+            }
+            else if (Dipped == false)
+            {
+                return base.ToString() + "No";
+            }
+            else
+            {
+                return base.ToString();
+            }
         }
     }
 }

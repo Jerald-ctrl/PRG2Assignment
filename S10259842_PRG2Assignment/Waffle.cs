@@ -26,7 +26,7 @@ namespace S10259842_PRG2Assignment
             WaffleFlavour = null;
         }
 
-        public Waffle(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, string waffleFlavour) :base(option, scoops, flavours, toppings)
+        public Waffle(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, string waffleFlavour) :base("Waffle", scoops, flavours, toppings)
         {
             WaffleFlavour = waffleFlavour;
         }
@@ -34,10 +34,15 @@ namespace S10259842_PRG2Assignment
         public override double CalculatePrice()
         {
             double totalPrice = 3;
-            double flavourPrice = 0;
-            double toppingsPrice = 0;
 
-            //calculate price per scoop
+            //calculate price of waffle
+            
+            if (WaffleFlavour == "Charcoal" || WaffleFlavour == "Red Velvet" || WaffleFlavour == "Pandan")
+            {
+                totalPrice += 3;
+            }
+
+                //calculate price per scoop
             if (Scoops == 1)
             {
                 totalPrice += 4;
@@ -56,22 +61,21 @@ namespace S10259842_PRG2Assignment
             {
                 if (flavour.Premium == true)
                 {
-                    flavourPrice += 2;
+                    totalPrice += 2;
                 }
             }
 
             foreach (Topping topping in Toppings)
             {
-                toppingsPrice += 1;
+                totalPrice += 1;
             }
 
-            totalPrice = totalPrice + flavourPrice + toppingsPrice;
             return totalPrice;
         }
 
         public override string ToString()
         {
-            return base.ToString();
+            return base.ToString() + WaffleFlavour;
         }
     }
 }
