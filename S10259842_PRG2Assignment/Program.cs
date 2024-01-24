@@ -15,7 +15,25 @@ namespace S10259842_PRG2Assignment
 
         static void Main(string[] args)
         {
+            //setup code
+            Queue<Order> regularQueue = new Queue<Order>();
+            Queue<Order> goldenQueue = new Queue<Order>();
             List<Customer> customerList = new List<Customer>();
+
+
+            /* Code to Test order functions
+            Order order1 = new Order(1,DateTime.Now);
+            List<Flavour> flavours = new List<Flavour>();
+            flavours.Add(new Flavour("Strawberry",false,1));
+
+            List<Topping> toppings = new List<Topping>();
+            toppings.Add(new Topping("Oreos")); 
+            order1.AddIceCream(new Cup("Cup", 1,flavours,toppings));
+            regularQueue.Enqueue(order1);
+
+            order1.AddIceCream(new Cup("Cup", 1, flavours, toppings));
+            order1.ModifyIceCream(1);
+            Console.WriteLine(order1.IceCreamList[1]); */
 
             void DisplayMenu() //Displays the menu every iteration
             {
@@ -83,7 +101,7 @@ namespace S10259842_PRG2Assignment
                 else
                 {
                     Console.WriteLine("Regular queue: \r\n" + "--------------");
-                    foreach (Order order in goldenQueue)
+                    foreach (Order order in regularQueue)
                     {
                         DisplayOrder(order);
                     }
@@ -95,6 +113,7 @@ namespace S10259842_PRG2Assignment
             {
                 Console.WriteLine("Order Id:" + order.Id);
                 Console.WriteLine($"Time Received: {order.TimeReceived}");
+                
                 if (order.TimeFulfilled == null)
                 {
                     Console.WriteLine("Order is currently not fulfilled.");
@@ -182,9 +201,7 @@ namespace S10259842_PRG2Assignment
 
             }
 
-            //setup code
-            Queue<Order> regularQueue = new Queue<Order>();
-            Queue<Order> goldenQueue = new Queue<Order>();
+            
 
 
             // Testing
