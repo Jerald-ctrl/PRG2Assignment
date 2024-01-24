@@ -14,8 +14,8 @@ namespace S10259842_PRG2Assignment
 {
     class Waffle:IceCream
     {
-        private string? waffleFlavour;
-        public string? WaffleFlavour
+        private string waffleFlavour;
+        public string WaffleFlavour
         {
             get {  return waffleFlavour; } 
             set { waffleFlavour = value; }

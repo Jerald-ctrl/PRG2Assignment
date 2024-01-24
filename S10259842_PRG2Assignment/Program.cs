@@ -40,7 +40,7 @@ namespace S10259842_PRG2Assignment
                 Console.Write("" +
                     "------------- MENU --------------\r\n" +
                     "[1] List All Customers\r\n" +
-                    "[2] List all current orders\r\n" +
+                    "[2] List all current orders (the working one)\r\n " +
                     "[3] Register a new customer\r\n" +
                     "[4] Create a customer’s order\r\n" +
                     "[5] Display order details of a customer\r\n" +
