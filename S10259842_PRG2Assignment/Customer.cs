@@ -69,12 +69,13 @@ namespace S10259842_PRG2Assignment
 
         }
 
-        public Order MakeOrder()
+        public Order MakeOrder() //Relies on CurrentOrder to Make a new order
 
         {
             CurrentOrder = new Order();
             orderHistory.Add(CurrentOrder);
             return CurrentOrder;
+
 
 
         }
@@ -90,6 +91,11 @@ namespace S10259842_PRG2Assignment
             {
                 return false;
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{Name,-12} {MemberId,-12} {Dob,-12} {currentOrder,-12} {CurrentOrder,-12} {OrderHistory,-12} {Rewards,-12}";
         }
     }
 }
