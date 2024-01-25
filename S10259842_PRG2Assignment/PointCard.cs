@@ -1,4 +1,9 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿//==========================================================
+// Student Number : S10259842
+// Student Name : Jerald Tee Li Yi 
+// Partner Name : Keagan Alexander Sng Yu
+//==========================================================
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
