@@ -113,17 +113,21 @@ namespace S10259842_PRG2Assignment
             int scoops = CheckIntInput(Console.ReadLine(), 3);
 
 
-            Dictionary<string, int> iceCreamFlavours = new Dictionary<string, int>
+            using (StreamReader sR = new StreamReader("flavours.csv"))
             {
-                {"Vanilla", 0 },
-                { "Chocolate", 0 },
-                { "Strawberry", 0 },
-                { "Durian", 0 },
-                { "Ube", 0 },
-                { "Sea Salt", 0 }
-            };
+                sR.ReadLine(); //Gets rid of header
+                while (true)
+                {
+                    string line = sR.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+                    
+                }
+            }
             
-        
+            
             List<Flavour> FlavourList = new List<Flavour>();
             
 
@@ -143,44 +147,35 @@ namespace S10259842_PRG2Assignment
                 int scoopFlavour = CheckIntInput(Console.ReadLine(), 5);
                 if (scoopFlavour == 0)
                 {
-                    iceCreamFlavours["Vanilla"] += 1;
+                    FlavourList.Add(new Flavour("Vanilla", false));
                 }
+
+
                 if (scoopFlavour == 1)
                 {
-                    iceCreamFlavours["Chocolate"] += 1;
+                    /*iceCreamFlavours["Chocolate"] += 1; */
+                    FlavourList.Add(new Flavour("Chocolate",false));
                 }
                 if (scoopFlavour == 2)
                 {
-                    iceCreamFlavours["Strawberry"] += 1;
+                    //iceCreamFlavours["Strawberry"] += 1;
+                    FlavourList.Add(new Flavour("Strawberry",false));
+
                 }
                 if (scoopFlavour == 3)
                 {
-                    iceCreamFlavours["Durian"] += 1;
+                    FlavourList.Add(new Flavour("Durian", true));
                 }
                 if (scoopFlavour == 4)
                 {
-                    iceCreamFlavours["Ube"] += 1;
+                    FlavourList.Add(new Flavour("Ube", true));
                 }
                 if (scoopFlavour == 5)
                 {
-                    iceCreamFlavours["Sea Salt"] += 1;
+                    FlavourList.Add(new Flavour("Sea Salt", true));
                 }
             }
-            int dictIndex = 0;
-                foreach (KeyValuePair<string, int> kVp in iceCreamFlavours)
-                {
-                    dictIndex++;
-                    string flavourName = kVp.Key;
-                    if (dictIndex < 3)
-                    {
-                        FlavourList.Add(new Flavour(kVp.Key, false, kVp.Value));
-                    }
-                    else
-                    {
-                        FlavourList.Add(new Flavour(kVp.Key, true, kVp.Value));
-                    }
-                   
-                }
+            
             // IceCreamFlavourList.Add(new Flavour(flavourList[scoopFlavour],false,flavourList.));
 
 
