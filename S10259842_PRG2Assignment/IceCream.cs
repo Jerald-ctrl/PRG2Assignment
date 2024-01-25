@@ -14,12 +14,12 @@ namespace S10259842_PRG2Assignment
 {
     abstract class IceCream
     {
-        private string? option;
+        private string option;
         private int scoops;
         private List<Flavour> flavours;
         private List<Topping> toppings;
 
-        public string? Option
+        public string Option
         {
             get { return option; }
             set { option = value; }

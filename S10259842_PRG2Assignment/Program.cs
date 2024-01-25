@@ -18,11 +18,31 @@ namespace S10259842_PRG2Assignment
             //setup code
             Queue<Order> regularQueue = new Queue<Order>();
             Queue<Order> goldenQueue = new Queue<Order>();
-            List<Customer> customerList = new List<Customer>();
 
-            /*
+            Dictionary<int, Customer> customerDict = new Dictionary<int, Customer>();
+
+            void InitialiseCustomers()
+            {
+                using (StreamReader cReader = new StreamReader("customers.csv"))
+                {
+                    cReader.ReadLine();
+                    
+                    string? line;
+                    while ((line = cReader.ReadLine()) != null)
+                    {
+                        string[] cInfo = line.Split(",");
+                        Customer customer = new Customer(cInfo[0], Convert.ToInt32(cInfo[1]), Convert.ToDateTime(cInfo[2]));
+                        customerDict.Add(customer.MemberId, customer);
+                    }
+                    cReader.Close();
+                }
+            }
+
+            InitialiseCustomers();
+            
+
             //Code to Test order functions
-            Order order1 = new Order(1,DateTime.Now);
+            /*Order order1 = new Order(1,DateTime.Now);
             List<Flavour> flavours = new List<Flavour>();
             flavours.Add(new Flavour("Strawberry",false,1));
 
@@ -33,14 +53,15 @@ namespace S10259842_PRG2Assignment
 
             order1.AddIceCream(new Cup("Cup", 1, flavours, toppings));
             order1.ModifyIceCream(1);
-            Console.WriteLine(order1.IceCreamList[1]); */
+            Console.WriteLine(order1.IceCreamList[1]); 
+            */
 
             void DisplayMenu() //Displays the menu every iteration
             {
                 Console.Write("" +
                     "------------- MENU --------------\r\n" +
                     "[1] List All Customers\r\n" +
-                    "[2] List all current orders\r\n" +
+                    "[2] List all current orders (the working one)\r\n " +
                     "[3] Register a new customer\r\n" +
                     "[4] Create a customer’s order\r\n" +
                     "[5] Display order details of a customer\r\n" +
@@ -52,30 +73,14 @@ namespace S10259842_PRG2Assignment
 
             void ListAllCustomers() //basic feature 1 (Keagan)
             {
-                using (StreamReader cReader = new StreamReader("customers.csv"))
-                {
-                    string[] headers = cReader.ReadLine().Split(",");
-                    for (int i = 0; i < 3; i++)
-                    {
-                        Console.Write($"{headers[i],-12}");
-                    }
-                    Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine($"{"Name", -12} {"Member ID", -14} {"Date of Birth", -12}");
 
-                    string? line;
-                    while ((line = cReader.ReadLine()) != null)
-                    {
-                        string[] cInfo = line.Split(",");
-                        //Customer customer = new Customer(cInfo[0], Convert.ToInt32(cInfo[1]), Convert.ToDateTime(cInfo[2]));
-                        //customerList.Add(customer);
-                        //Console.WriteLine($"{cInfo[0],-12} {cInfo[1],-12} {cInfo[2],-12} {cInfo[3],-20} {cInfo[4],-20} {cInfo[5],-12}");
-                    }
-                    cReader.Close();
-                }
-
-                foreach (Customer c in customerList)
+                foreach (KeyValuePair<int, Customer> c in customerDict)
                 {
-                    Console.WriteLine(c);
+                    Console.WriteLine(c.Value);
                 }
+                Console.WriteLine();
             }
 
             void ListAllCurrentOrders(Queue<Order> regularQueue, Queue<Order> goldenQueue) //basic feature 2 (Jerald)

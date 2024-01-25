@@ -14,10 +14,10 @@ namespace S10259842_PRG2Assignment
 {
     class Flavour
     {
-        private string? type;
+        private string type;
         private bool premium;
 
-        public string? Type
+        public string Type
         {
             get { return type; }
             set { type = value; }
