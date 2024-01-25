@@ -88,7 +88,7 @@ namespace S10259842_PRG2Assignment
         public override string ToString()
         {
            
-            return $"{Points,-12} {PunchCard,-12} {Tier,-12}";
+            return $"{Tier,-12} {Points,-20} {PunchCard,-20}";
         }
 
 

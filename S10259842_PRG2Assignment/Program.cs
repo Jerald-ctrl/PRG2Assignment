@@ -32,6 +32,11 @@ namespace S10259842_PRG2Assignment
                     {
                         string[] cInfo = line.Split(",");
                         Customer customer = new Customer(cInfo[0], Convert.ToInt32(cInfo[1]), Convert.ToDateTime(cInfo[2]));
+
+                        PointCard card = new PointCard(Convert.ToInt32(cInfo[4]), Convert.ToInt32(cInfo[5]));
+                        card.Tier = cInfo[3];
+                        customer.Rewards = card;
+                        
                         customerDict.Add(customer.MemberId, customer);
                     }
                     cReader.Close();
@@ -61,7 +66,7 @@ namespace S10259842_PRG2Assignment
                 Console.Write("" +
                     "------------- MENU --------------\r\n" +
                     "[1] List All Customers\r\n" +
-                    "[2] List all current orders (the working one)\r\n " +
+                    "[2] List all current orders (the working one)\r\n" +
                     "[3] Register a new customer\r\n" +
                     "[4] Create a customer’s order\r\n" +
                     "[5] Display order details of a customer\r\n" +
@@ -74,7 +79,7 @@ namespace S10259842_PRG2Assignment
             void ListAllCustomers() //basic feature 1 (Keagan)
             {
                 Console.WriteLine();
-                Console.WriteLine($"{"Name", -12} {"Member ID", -14} {"Date of Birth", -12}");
+                Console.WriteLine($"{"Name", -12} {"Member ID", -14} {"Date of Birth", -17} {"Card Tier",-12} {"Membership Points", -20} {"Punch Card", -20} ");
 
                 foreach (KeyValuePair<int, Customer> c in customerDict)
                 {
@@ -132,58 +137,68 @@ namespace S10259842_PRG2Assignment
 
             void RegisterCustomer() //basic feature 3 (Keagan)
             {
+                string? newName = "";
+                int newId = 0;
+                DateTime newDob = DateTime.Today;
 
-                /*while (true)
+                while (true)
+                {
+                    Console.Write("Enter name: ");
+                    newName = Console.ReadLine();
+
+                    if (newName.Any(char.IsNumber) || newName.Any(char.IsSymbol))
+                    {
+                        Console.WriteLine($"Invalid name. Please try again. ");
+                        continue;
+                    }
+
+                    break;
+                }
+
+                while (true)
                 {
                     try
                     {
-                        Console.Write("Enter name: ");
-                        string? newName = Console.ReadLine();
+                        Console.Write("Enter ID: ");
+                        newId = Convert.ToInt32(Console.ReadLine());
 
-                        if (newName.Any(char.IsNumber) || newName.Any(char.IsSymbol))
-                        {
-                            Console.WriteLine("Invalid name. Please try again. ");
-                            continue;
-                        }
-                            Console.Write("Enter ID: ");
-                            int newID = Convert.ToInt32(Console.ReadLine());
-
-                            Console.Write("Enter Date of Birth (DD/MM/YYYY): ");
-                            string? date = Console.ReadLine();
-
-                            //Regex dateFormat = new Regex("(?<date>[^@]+)/(?<month>[^@]+)/?<year>[^@]+");
-                            Regex dateFormat = new Regex(@"^(\d{1})/(\d{1})/(\d{1})$");
-                            Match dateMatch = dateFormat.Match(date);
-
-                            DateTime newDOB = DateTime.Today;
-                            if (dateMatch.Success)
-                            {
-                                newDOB = Convert.ToDateTime(date);
-                            }
-                            else
-                            {
-                                Console.WriteLine("Date of Birth was not in correct format DD/MM/YYYY. Please try again. ");
-                                continue;
-                            }
-
-                            //can only be implemented after Customer class is fully complete
-                            Customer newCustomer = new Customer(newName, newID, newDOB);
-                            PointCard newCard = new PointCard();
-                            newCustomer.Rewards = newCard;
-                            using (StreamWriter cWriter = new StreamWriter("customers.csv"))
-                            {
-                                cWriter.WriteLine(newName, newID, newDOB, "Ordinary", 0, 0);
-                                cWriter.Close();
-                            }
-
-                            break;
-                        }
+                        break;
+                    }
 
                     catch (FormatException f)
                     {
-                        Console.WriteLine($"{f.Message}");
+                        Console.WriteLine($"{f.Message} ID has to be a 6-digit number. Please try again. ");
                     }
-                }*/
+                }
+
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Enter Date of Birth (DD/MM/YYYY): ");
+                        string date = $"{Console.ReadLine():dd/MM/yyyy}";
+                        Console.WriteLine(date);
+
+                        newDob = Convert.ToDateTime(date);
+
+                        break;
+                    }
+
+                    catch (FormatException f)
+                    {
+                        Console.WriteLine($"{f.Message} Date of Birth was not in correct format DD/MM/YYYY. Please try again. ");
+                    }
+                }
+
+                Customer newCustomer = new Customer(newName, newId, newDob);
+                PointCard newCard = new PointCard();
+                newCustomer.Rewards = newCard;
+
+                using (StreamWriter cWriter = new StreamWriter("customers.csv"))
+                {
+                    cWriter.WriteLine($"{newName},{newId},{newDob},{"Ordinary"},{0},{0}");
+                    cWriter.Close();
+                }
             }
         
             void CreateCustomerOrder() //basic feature 4 (Keagan)
