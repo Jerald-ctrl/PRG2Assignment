@@ -4,6 +4,7 @@
 // Partner Name : Jerald Tee Li Yi
 //==========================================================
 
+using Microsoft.VisualBasic;
 using System.Text.RegularExpressions;
 
 namespace S10259842_PRG2Assignment
@@ -137,6 +138,9 @@ namespace S10259842_PRG2Assignment
 
             void RegisterCustomer() //basic feature 3 (Keagan)
             {
+                Console.WriteLine();
+                Console.WriteLine("---------------REGISTER NEW CUSTOMER---------------");
+
                 string? newName = "";
                 int newId = 0;
                 DateTime newDob = DateTime.Today;
@@ -149,6 +153,7 @@ namespace S10259842_PRG2Assignment
                     if (newName.Any(char.IsNumber) || newName.Any(char.IsSymbol))
                     {
                         Console.WriteLine($"Invalid name. Please try again. ");
+                        Console.WriteLine();
                         continue;
                     }
 
@@ -160,14 +165,22 @@ namespace S10259842_PRG2Assignment
                     try
                     {
                         Console.Write("Enter ID: ");
-                        newId = Convert.ToInt32(Console.ReadLine());
+                        string? id = Console.ReadLine();
 
-                        break;
+                        if (id.Length == 6)
+                        {
+                            newId = Convert.ToInt32(id);
+                            break;
+                        }
+                        else if (id.Length != 6)
+                        {
+                            throw new FormatException();
+                        }
                     }
-
-                    catch (FormatException f)
+                    catch (FormatException)
                     {
-                        Console.WriteLine($"{f.Message} ID has to be a 6-digit number. Please try again. ");
+                        Console.WriteLine("ID has to be a 6-digit number. Please try again. ");
+                        Console.WriteLine();
                     }
                 }
 
@@ -176,17 +189,33 @@ namespace S10259842_PRG2Assignment
                     try
                     {
                         Console.Write("Enter Date of Birth (DD/MM/YYYY): ");
-                        string date = $"{Console.ReadLine():dd/MM/yyyy}";
-                        Console.WriteLine(date);
+                        string? date = Console.ReadLine();
 
-                        newDob = Convert.ToDateTime(date);
+                        Regex dateFormat = new Regex(@"^(\d\d)/(\d\d)/(\d\d\d\d)$");
+                        
+                        Match dateMatch = dateFormat.Match(date);
+
+                        if (dateMatch.Success)
+                        {
+                            newDob = Convert.ToDateTime(date);
+                        }
+                        else
+                        {
+                            throw new Exception();
+                        }
 
                         break;
                     }
-
+                    
                     catch (FormatException f)
                     {
-                        Console.WriteLine($"{f.Message} Date of Birth was not in correct format DD/MM/YYYY. Please try again. ");
+                        Console.WriteLine(f.Message);
+                        Console.WriteLine();
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine($"Date of Birth was not in correct format DD/MM/YYYY. Please try again. ");
+                        Console.WriteLine();
                     }
                 }
 
@@ -199,6 +228,10 @@ namespace S10259842_PRG2Assignment
                     cWriter.WriteLine($"{newName},{newId},{newDob},{"Ordinary"},{0},{0}");
                     cWriter.Close();
                 }
+
+                Console.WriteLine();
+                Console.WriteLine("New customer successfully registered!");
+                Console.WriteLine();
             }
         
             void CreateCustomerOrder() //basic feature 4 (Keagan)
