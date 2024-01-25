@@ -98,7 +98,7 @@ namespace S10259842_PRG2Assignment
 
         public override string ToString()
         {
-            return $"{Name, -12} {MemberId, -14} {Dob,-12:dd/MM/yyyy} ";
+            return $"{Name, -12} {MemberId, -14} {Dob,-17:dd/MM/yyyy} {Rewards, -20}";
         }
     }
 }
