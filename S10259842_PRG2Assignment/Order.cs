@@ -22,30 +22,30 @@ namespace S10259842_PRG2Assignment
 
 
         public int Id
-        { 
-            get { return id; } 
+        {
+            get { return id; }
             set { id = value; }
         }
 
         public DateTime TimeReceived
-        { 
-            get { return timeReceived; } 
-            set { timeReceived = value; } 
+        {
+            get { return timeReceived; }
+            set { timeReceived = value; }
         }
 
         public DateTime? TimeFulfilled
-        { 
-            get { return timeFulfilled; } 
-            set { timeFulfilled = value; } 
+        {
+            get { return timeFulfilled; }
+            set { timeFulfilled = value; }
         }
 
         public List<IceCream> IceCreamList
-        {  get { return iceCreamList; } set { iceCreamList = value; } }
+        { get { return iceCreamList; } set { iceCreamList = value; } }
 
         public Order()
-            {
+        {
 
-            }
+        }
 
         public Order(int id, DateTime time)
         {
@@ -84,6 +84,35 @@ namespace S10259842_PRG2Assignment
             }
             return intInput;
         }
+
+
+        public (Dictionary<String, Double>,List<String>) ReadCSV(string filename) // Function to read CSV files for orders.csv and toppings.csv
+        {
+            Dictionary<String, Double> info = new Dictionary<String, Double>();
+            List<String> keys = new List<String>();
+            using (StreamReader sR = new StreamReader(filename))
+            {
+                sR.ReadLine(); //Gets rid of header
+                while (true)
+                {
+                    string line = sR.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+                   
+                    List<String> infoLine = line.Split(",").ToList();
+
+                    //Console.ReadLine();
+                    info[infoLine[0]] = Convert.ToDouble(infoLine[1]);
+                    keys.Add(infoLine[0]);
+                }
+                return (info,keys);
+            }
+        }
+
+
+        
         public void ModifyIceCream(int index) //Modify a singular ice cream.
         /* if [1] is selected, have the user select which ice cream to modify then prompt the user 
          for the new information for the modifications they wish to make to the ice cream
@@ -94,16 +123,12 @@ namespace S10259842_PRG2Assignment
             int input = 0;
             string option = "";
             bool dipped = false;
-            bool velvet = false;
-            IceCream iceCream = null;
-
-
-            Console.WriteLine(
+            Console.Write(
                 "Ice cream options: \r\n" +
                 "[0] Cup \r\n" +
                 "[1] Cone \r\n" +
                 "[2] Waffle \r\n" +
-                "Please enter ice cream option. "); //check for 1-3
+                "Please enter ice cream option: "); //check for 1-3
 
             input = CheckIntInput(Console.ReadLine(), 2); //Check 
 
@@ -113,106 +138,87 @@ namespace S10259842_PRG2Assignment
             int scoops = CheckIntInput(Console.ReadLine(), 3);
 
 
-            using (StreamReader sR = new StreamReader("flavours.csv"))
-            {
-                sR.ReadLine(); //Gets rid of header
-                while (true)
+
+
+
+
+            //Code to print flavours
+            //----
+
+                (Dictionary<String, Double> flavoursData, List<string> FlavourNames) = ReadCSV("flavours.csv");
+                Console.Write("Flavours: \r\n");
+                
+                int DataIndex = 0; 
+                foreach (KeyValuePair<String, Double> flavoursKvP in flavoursData) 
                 {
-                    string line = sR.ReadLine();
-                    if (line == null)
-                    {
-                        break;
-                    }
                     
+                    Console.WriteLine($"[{DataIndex}] {flavoursKvP.Key} (+{flavoursKvP.Value})");
+                   
+                    DataIndex++;
                 }
-            }
-            
+                
             
             List<Flavour> FlavourList = new List<Flavour>();
+            //
+            //----
             
-
-            Console.WriteLine(
-                "Flavours: \r\n" +
-                "[0] Vanilla \r\n" +
-                "[1] Chocolate \r\n" +
-                "[2] Strawberry \r\n \r\n" +
-                "Premium Flavours (+$2): \r\n" +
-                "[3] Durian \r\n" +
-                "[4] Ube \r\n" +
-                "[5] Sea Salt \r\n");
-
-            for (int i = 0; i < scoops; i++)
+            // 
+            for (int i = 0; i < scoops; i++) //Add flavours to FlavourList
             {
                 Console.Write($"Please input choice for scoop no.{i + 1}: ");
-                int scoopFlavour = CheckIntInput(Console.ReadLine(), 5);
-                if (scoopFlavour == 0)
+                int flavourIndex = CheckIntInput(Console.ReadLine(), 5);
+             
+                if (flavoursData[FlavourNames[flavourIndex]] > 0)  //Checks for premium flavour using the price in flavoursData
                 {
-                    FlavourList.Add(new Flavour("Vanilla", false));
+                    FlavourList.Add(new Flavour(FlavourNames[flavourIndex], true));
+                    
                 }
-
-
-                if (scoopFlavour == 1)
+                else
                 {
-                    /*iceCreamFlavours["Chocolate"] += 1; */
-                    FlavourList.Add(new Flavour("Chocolate",false));
-                }
-                if (scoopFlavour == 2)
-                {
-                    //iceCreamFlavours["Strawberry"] += 1;
-                    FlavourList.Add(new Flavour("Strawberry",false));
-
-                }
-                if (scoopFlavour == 3)
-                {
-                    FlavourList.Add(new Flavour("Durian", true));
-                }
-                if (scoopFlavour == 4)
-                {
-                    FlavourList.Add(new Flavour("Ube", true));
-                }
-                if (scoopFlavour == 5)
-                {
-                    FlavourList.Add(new Flavour("Sea Salt", true));
+                    FlavourList.Add(new Flavour(FlavourNames[flavourIndex], false));
                 }
             }
-            
-            // IceCreamFlavourList.Add(new Flavour(flavourList[scoopFlavour],false,flavourList.));
 
-
-            /*Dictionary<string, int> toppingFlavours = new Dictionary<string, int>
-            {
-                {"Sprinkles", 0 },
-                { "Mochi", 0 },
-                { "Sago", 0 },
-                { "Oreos", 0 },
-            }; */
-            List<string> toppingFlavours = new List<string>() {"Sprinkles","Mochi","Sago","Oreos" };
+            (Dictionary<String, Double> toppingsData, List<string> toppingNames) = ReadCSV("toppings.csv");
             List<Topping> toppingList = new List<Topping>();
+            int toppingLines = 0;
 
-            Console.Write(
-                  "Toppings:  \r\n" +
-
-                  "[0] Sprinkles \r\n" +
-                  "[1] Mochi \r\n " +
-                  "[2] Sago \r\n " +
-                  "[3] Oreos \r\n " +
-                  "[4] End \r\n" +
-                  "Please enter number of wanted ice cream toppings (up to 4): ");
-
-            for (int i = 0; i < 4; i++)
+            DataIndex = 0;
+            foreach (KeyValuePair<String, Double> toppingKvP in toppingsData)
             {
+
+                Console.WriteLine($"[{DataIndex}] {toppingKvP.Key} (+{toppingKvP.Value})");
+
+                DataIndex++;
+            }
+
+
+           
+            /*
+            Console.Write("Toppings: (+$1 each)  \r\n");
+            for (int i = 0; i < toppingLines; i++)
+            {
+                Console.Write($"[{i}] {toppingNames[i]} \r\n");
+            }
+            Console.Write($"[{toppingLines}] End \r\n");
+            */
+            for (int i = 0; i < 4; i++)  //Code to enter toppings
+            {
+
+
+                Console.Write($"Please enter your choice of Toppings (up to 4 toppings): ");
                 int toppingOption = CheckIntInput(Console.ReadLine(), 4);
-                if (toppingOption == 4)
+                if (toppingOption == toppingLines)
                 {
                     break;
                 }
-                toppingList.Add(new Topping(toppingFlavours[toppingOption]));
-                
+                toppingList.Add(new Topping(toppingNames[toppingOption]));
+            }
+            // ------
 
-               
-            } //For loop to add up to 4 toppings
+
             IceCream iceCream1 = null;
-            if (input == 1)  //Check if he wants to order a Chocolate-cone
+            if (input == 1)  //if block to make a cup based on input,
             {
                 option = "Cone";
                 Console.WriteLine(
@@ -221,7 +227,7 @@ namespace S10259842_PRG2Assignment
                         "[1] No, I'd like a regular. \r\n" +
                         "Enter your option: ");
                 int dippedChoice = CheckIntInput(Console.ReadLine(), 1);
-                if (dippedChoice == 1)
+                if (dippedChoice == 1) //Check if he wants to order a Chocolate-cone
                 {
                     dipped = true;
                 }
@@ -254,19 +260,19 @@ namespace S10259842_PRG2Assignment
 
             }
 
-            else if (input == 2) //Check for input waffle flavour
+            else if (input == 2) ////if block to make a waffle based on input
             {
                 option = "Waffle";
                 int waffleOption = 0;
 
                 List<string> waffleFlavours = new List<string>() {"Regular", "Red Velvet", "Charcoal", "Pandan Waffle" };
-                Console.WriteLine(
+                Console.Write(
                    "Waffle Flavours: \r\n" +
                    "[0] Regular \r\n" +
                    "[1] Red Velvet \r\n" +
-                   "[2] Charcoal \r\n " +
-                   "[3] Pandan Waffle \r\n " +
-                   "Enter the waffle flavour. ");
+                   "[2] Charcoal \r\n" +
+                   "[3] Pandan Waffle \r\n" +
+                   "Enter the waffle flavour: ");
 
                 waffleOption = CheckIntInput(Console.ReadLine(), 3);
                 iceCream1 = new Waffle(option, scoops, FlavourList, toppingList, waffleFlavours[waffleOption]);
@@ -300,7 +306,7 @@ namespace S10259842_PRG2Assignment
             {
                 option = "Cup";
                 iceCream1 = new Cup(option, scoops, FlavourList, toppingList);
-            }
+            } //else block to make a cup based on input
 
             IceCreamList[index] = iceCream1;
 
