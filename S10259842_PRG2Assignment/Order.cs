@@ -340,7 +340,7 @@ namespace S10259842_PRG2Assignment
             iceCreamList.Add(iceCream);
         }
 
-        public void DeleteIceCream(int index) 
+        public void DeleteIceCream(int index) //should you use index - 1 instead (?)
         {
             iceCreamList.RemoveAt(index);
         }
