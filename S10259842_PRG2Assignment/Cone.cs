@@ -21,8 +21,12 @@ namespace S10259842_PRG2Assignment
             set { dipped = value; }
         }
 
-        public Cone():base()
+        public Cone()
         {
+            Option = "Cone";
+            Scoops = 0;
+            Flavours = new List<Flavour>();
+            Toppings = new List<Topping>();
             dipped = false;
         }
 
@@ -74,11 +78,11 @@ namespace S10259842_PRG2Assignment
         {
             if (Dipped == true)
             {
-                return base.ToString() + "Yes";
+                return base.ToString() + "\nDipped: Yes";
             }
             else if (Dipped == false)
             {
-                return base.ToString() + "No";
+                return base.ToString() + "\nDipped: No";
             }
             else
             {

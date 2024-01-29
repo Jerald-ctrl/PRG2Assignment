@@ -45,7 +45,7 @@ namespace S10259842_PRG2Assignment
 
         public IceCream()
         {
-            Option = "Option";
+            Option = "Ice Cream";
             Scoops = 0;
             Flavours = new List<Flavour>();
             Toppings = new List<Topping>();
@@ -66,17 +66,27 @@ namespace S10259842_PRG2Assignment
             string? flavours = "";
             foreach (Flavour flavour in Flavours)
             {
-                flavours += flavour.ToString() + "\n";
+                flavours += flavour.ToString() + ", ";
             }
 
             string? toppings = "";
-            foreach (Topping topping in Toppings)
+
+            if (Toppings.Count != 0)
             {
-                toppings += topping.ToString() + "\n";
+                foreach (Topping topping in Toppings)
+                {
+                    toppings += topping.ToString() + ", ";
+                }
+            }
+            else
+            {
+                toppings = "None";
             }
 
-            return $"{Option, -12} {Scoops, -12} {flavours, -12} {toppings, -12}";
+            return $"Option: {Option} \nScoops: {Scoops} \n\n"
+                + "Flavours: " + flavours.Trim().Trim(',') + "\n"
+                + "Toppings: " + toppings.Trim().Trim(',');
         }
-
     }
 }
+
