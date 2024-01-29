@@ -133,8 +133,8 @@ namespace S10259842_PRG2Assignment
                     "Enter your option: ");
             }
 
-            //EDIT THIS to show which features use this method
-            Customer SearchCustomer(int id) //method to search for customer and return Customer object (used in features 4 and 5(?))
+            //method to search for customer and return Customer object (used in features 4 and 5 and 6)
+            Customer SearchCustomer(int id) 
             {
                 Customer customer = null;
                 foreach (KeyValuePair<int, Customer> c in customerDict)
@@ -194,6 +194,7 @@ namespace S10259842_PRG2Assignment
 
             void DisplayOrder(Order order) // Function to display all information about an order, used for Q2, Q5
             {
+                Console.WriteLine(order);
                 Console.WriteLine("Order Id:" + order.Id);
                 Console.WriteLine($"Time Received: {order.TimeReceived}");
 
@@ -244,7 +245,7 @@ namespace S10259842_PRG2Assignment
                             newId = Convert.ToInt32(id);
                             break;
                         }
-                        else if (id.Length != 6)
+                        else
                         {
                             throw new FormatException();
                         }
@@ -583,8 +584,21 @@ namespace S10259842_PRG2Assignment
 
             void DisplayOrderDetails() //basic feature 5 (Jerald)
             {
-                // List information about all Customers: ListAllCustomers(); 
-                Console.WriteLine("Select a customer");
+                ListAllCustomers(); // List information about all Customers: 
+
+                //Code to select a Customer
+                // ---
+                Console.WriteLine("Input a customer ID to search: ");
+                int searchId = Convert.ToInt32(Console.ReadLine());
+                Customer customer = SearchCustomer(searchId);
+                // ---
+
+                customer.MakeOrder();
+                foreach (Order order in customer.OrderHistory)
+                {
+                    DisplayOrder(order); //Changed private Order currentOrder = null; in Customer.Cs
+                }
+
                 /* List the customers
                  prompt user to select a customer and retrieve the selected customer
                  retrieve all the order objects of the customer, past and current
@@ -594,7 +608,29 @@ namespace S10259842_PRG2Assignment
 
             void ModifyOrderDetails() //basic feature 6 (Jerald)
             {
+                ListAllCustomers();
+                Console.Write("Select customer (enter ID to select): ");
+                Customer customer = SearchCustomer(Convert.ToInt32(Console.ReadLine()));
 
+                /*
+                 * 
+                    list the customers
+                     prompt user to select a customer and retrieve the selected customer’s current order
+                     list all the ice cream objects contained in the order
+                     prompt the user to either [1] choose an existing ice cream object to modify, [2] add an 
+                    entirely new ice cream object to the order, or [3] choose an existing ice cream object to 
+                    delete from the order
+                    o if [1] is selected, have the user select which ice cream to modify then prompt the user 
+                    for the new information for the modifications they wish to make to the ice cream
+                    selected: option, scoops, flavours, toppings, dipped cone (if applicable), waffle flavour 
+                    (if applicable) and update the ice cream object’s info accordingly
+                    o if [2] is selected prompt the user for all the required info to create a new ice cream 
+                    object and add it to the order
+                    o if [3] is selected, have the user select which ice cream to delete then remove that ice 
+                    cream object from the order. But if this is the only ice cream in the order, then simply 
+                    display a message saying they cannot have zero ice creams in an order
+                     display the new updated orde 
+                 */
             }
 
 
@@ -604,8 +640,8 @@ namespace S10259842_PRG2Assignment
             string choice = "";
 
 
-
-            while (true) // Main loop 
+            // Main loop 
+            while (true) 
             {
 
                 DisplayMenu();
