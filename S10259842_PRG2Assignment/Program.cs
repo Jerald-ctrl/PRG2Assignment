@@ -22,9 +22,11 @@ namespace S10259842_PRG2Assignment
 
             Dictionary<int, Customer> customerDict = new Dictionary<int, Customer>();
 
+            string? file = "customers.csv";
+
             void InitialiseCustomers()
             {
-                using (StreamReader cReader = new StreamReader("customers.csv"))
+                using (StreamReader cReader = new StreamReader(file))
                 {
                     cReader.ReadLine();
 
@@ -134,20 +136,63 @@ namespace S10259842_PRG2Assignment
             }
 
             //EDIT THIS to show which features use this method
-            Customer SearchCustomer(int id) //method to search for customer and return Customer object (used in features 4 and 5(?))
+            Customer SearchCustomer() //method to search for customer and return Customer object (used in features 4 and 5(?))
             {
+                int selectedId = 0;
                 Customer customer = null;
-                foreach (KeyValuePair<int, Customer> c in customerDict)
+
+                while (true)
                 {
-                    if (id == c.Value.MemberId)
+                    try
                     {
-                        customer = c.Value;
+                        Console.Write("Select customer (enter ID to select): "); //place this try-catch block into the SearchCustomer
+                        string? id = Console.ReadLine();
+
+                        if (id.Length == 6 && id.All(char.IsDigit))
+                        {
+                            selectedId = Convert.ToInt32(id);
+                        }
+                        else
+                        {
+                            throw new FormatException();
+                        }
+
+
+                        foreach (KeyValuePair<int, Customer> c in customerDict) //search for Customer based on ID entered by user
+                        {
+                            if (selectedId == c.Value.MemberId)
+                            {
+                                customer = c.Value;
+                                break;
+                            }
+                        }
+
+                        if (customer == null)
+                        {
+                            throw new Exception();
+                        }
+
+                        Console.WriteLine($"Selected customer: {customer.Name} (ID: {customer.MemberId})");
+                        Console.WriteLine();
+
                         break;
                     }
-                }
 
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("ID has to be a 6-digit number. Please try again. ");
+                        Console.WriteLine();
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Customer not found. Please try again");
+                        Console.WriteLine();
+                    }
+                }
+                
                 return customer;
             }
+            
 
             void ListAllCustomers() //basic feature 1 (Keagan)
             {
@@ -208,7 +253,7 @@ namespace S10259842_PRG2Assignment
 
             }
 
-            void RegisterCustomer() //basic feature 3 (Keagan)
+            void RegisterCustomer() //basic feature 3 (Keagan) //check for repeated ID
             {
                 Console.WriteLine();
                 Console.WriteLine("---------------REGISTER NEW CUSTOMER---------------");
@@ -239,7 +284,7 @@ namespace S10259842_PRG2Assignment
                         Console.Write("Enter ID: ");
                         string? id = Console.ReadLine();
 
-                        if (id.Length == 6)
+                        if (id.Length == 6 && id.Any(char.IsDigit))
                         {
                             newId = Convert.ToInt32(id);
                             break;
@@ -292,10 +337,13 @@ namespace S10259842_PRG2Assignment
                 }
 
                 Customer newCustomer = new Customer(newName, newId, newDob);
+                customerDict.Add(newId, newCustomer); //add new customer to customerDict; ListAllCustomers (basic feature 1) will display all customers including new customers
+
                 PointCard newCard = new PointCard();
                 newCustomer.Rewards = newCard;
 
-                using (StreamWriter cWriter = new StreamWriter("customers.csv"))
+
+                using (StreamWriter cWriter = new StreamWriter(file))
                 {
                     cWriter.WriteLine($"{newName},{newId},{newDob},{"Ordinary"},{0},{0}");
                     cWriter.Close();
@@ -313,46 +361,10 @@ namespace S10259842_PRG2Assignment
                 Console.WriteLine();
                 ListAllCustomers();
 
-                int selectedId = 0;
-                Customer selectedCustomer = null;
+                SearchCustomer();
 
-                while (true) //try-catch block for error handling for ID user input
-                {
-                    try
-                    {
-                        Console.Write("Select customer (enter ID to select): ");
-                        string? id = Console.ReadLine();
+                //try-catch block for error handling for ID user input
 
-                        if (id.Length == 6)
-                        {
-                            selectedId = Convert.ToInt32(id);
-                        }
-                        else if (id.Length != 6)
-                        {
-                            throw new FormatException();
-                        }
-
-                        selectedCustomer = SearchCustomer(selectedId);
-                        if (selectedCustomer == null)
-                        {
-                            throw new Exception();
-                        }
-
-                        Console.WriteLine($"Selected customer: {selectedCustomer.Name} (ID: {selectedCustomer.MemberId})");
-                        Console.WriteLine();
-                        break;
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("ID has to be a 6-digit number. Please try again. ");
-                        Console.WriteLine();
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("Customer not found. Please try again");
-                        Console.WriteLine();
-                    }
-                }
 
                 Order newOrder = new Order();
 
