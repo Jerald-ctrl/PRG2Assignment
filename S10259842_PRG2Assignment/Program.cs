@@ -132,7 +132,7 @@ namespace S10259842_PRG2Assignment
                     "---------------------------------\r\n" +
                     "Enter your option: ");
             }
-
+            
             int CheckIntInput(string input,int minInt, int maxInt) //checks that input is INT and is 0 < x < maxInt
             {
                 int intInput = 0;
@@ -141,7 +141,7 @@ namespace S10259842_PRG2Assignment
                     try
                     {
                         intInput = Convert.ToInt16(input);
-                        if (intInput < 0 || intInput > maxInt)
+                        if (intInput < minInt || intInput > maxInt)
                         {
                             Console.WriteLine($"Error: Input must be between 0-{maxInt}. ");
 
@@ -529,7 +529,7 @@ namespace S10259842_PRG2Assignment
                             }
 
                             Console.WriteLine();
-
+                            
                             try
                             {
                                 Console.Write($"Enter flavour {i + 1}: ");
@@ -643,14 +643,61 @@ namespace S10259842_PRG2Assignment
                 ListAllCustomers();
                 Console.Write("Select customer (enter ID to select): ");
                 Customer customer = SearchCustomer(Convert.ToInt32(Console.ReadLine()));
-                Order customerOrder = customer.CurrentOrder;
-                Console.WriteLine(customerOrder);
-                Console.Write(
-                    "[1] choose an existing ice cream object to modify \r\n" +
-                    "[2] add an entirely new ice cream object to the order \r\n" +
-                    "[3] choose an existing ice cream object to delete from the order \r\n" +
-                    "Enter your option: ");
-                int option = Convert.ToInt32(Console.ReadLine());
+                Order currentOrder = customer.CurrentOrder;
+                Console.WriteLine(currentOrder); //List all the ice cream information in the order
+                int option = 0;
+               
+                    Console.Write(
+                   "[1] Choose an existing ice cream object to modify \r\n" +
+                   "[2] Add an entirely new ice cream object to the order (compulsory if there are no orders) \r\n" +
+                   "[3] Choose an existing ice cream object to delete from the order \r\n" +
+                   "[0] Exit \r\n" +
+                   "Enter your option: ");
+                    option = CheckIntInput(Console.ReadLine(), 0, 3);
+
+
+                int iceCreamListCount = currentOrder.IceCreamList.Count();
+                if (option == 0)
+                {
+                    return;
+                }
+                else if (option == 1)  // Select which ice cream to modify 
+                {
+                    if (iceCreamListCount < 1)
+                    {
+                        Console.WriteLine("Option is unavailable since there is no current order. Please try again and input option 2");
+                        return;
+                    }
+                    Console.Write("Enter Ice Cream no. to modify (must be int): ");
+                    int index = CheckIntInput(Console.ReadLine(),1,iceCreamListCount); //Check that the input is a valid index within the list
+                    currentOrder.ModifyIceCream(index-1);
+
+                }
+                else if (option == 2) //Option to Create a new ice cream object and add it to the order
+                {
+                    //Keagan i need ur code to pop up pretty soon man.
+                }
+
+                else if (option == 3) //Option to Delete an ice cream object from the list
+                {
+                    if (iceCreamListCount < 1)
+                    {
+                        Console.WriteLine("Option is unavailable since there is no current order. Please try again and input option 2");
+                        return;
+                    }
+                    else if (iceCreamListCount < 2)
+                    {
+                        Console.WriteLine("You cannot have 0 ice creams in an order. Please try again and input option 2");
+                    }
+                    else 
+                    {
+                        Console.Write("Enter Ice Cream no. to delete (must be int): ");
+                        int index = CheckIntInput(Console.ReadLine(), 1, iceCreamListCount); //Check that the input is a valid index within the list
+                        currentOrder.DeleteIceCream(index-1);
+                    }
+                }
+                Console.WriteLine(currentOrder); //List all the ice cream information in the order
+
 
                 /*
                  * 
