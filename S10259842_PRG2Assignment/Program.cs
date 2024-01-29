@@ -622,7 +622,34 @@ namespace S10259842_PRG2Assignment
 
                 DisplayMenu();
                 choice = Console.ReadLine();
-                if (choice == "1") //if else conditions (with validation) to ensure valid inputs are given.
+
+                /*
+                switch (choice)
+                {
+                    case "1":
+                        ListAllCustomers();
+                        break;
+                    case "2":
+                        ListAllCurrentOrders(regularQueue, goldenQueue);
+                        break;
+                    case "3":
+                        RegisterCustomer();
+                        break;
+                    case "4":
+                        CreateCustomerOrder();
+                        break;
+                    case "5":
+                        DisplayOrderDetails();
+                        break;
+                    case "6":
+                        ModifyOrderDetails();
+                        break;
+                    case "0":
+                        break;
+
+                } */
+
+                if (choice == "1") //if else conditions (with validation) to ensure valid inputs are given. using switch would require another if/else to check for inputs out of range
                 {
                     ListAllCustomers();
                 }
