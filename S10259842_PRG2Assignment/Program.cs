@@ -133,6 +133,38 @@ namespace S10259842_PRG2Assignment
                     "Enter your option: ");
             }
 
+            int CheckIntInput(string input,int minInt, int maxInt) //checks that input is INT and is 0 < x < maxInt
+            {
+                int intInput = 0;
+                while (true)
+                {
+                    try
+                    {
+                        intInput = Convert.ToInt16(input);
+                        if (intInput < 0 || intInput > maxInt)
+                        {
+                            Console.WriteLine($"Error: Input must be between 0-{maxInt}. ");
+
+                            throw new Exception();
+                        }
+                        break;
+                    }
+                    catch (FormatException ex) //Catches non-int inputs
+                    {
+                        Console.WriteLine(ex.Message);
+
+                        Console.Write("Please re-enter your option: ");
+                        input = Console.ReadLine();
+                    }
+                    catch (Exception ex) //Acts like a finally block but doesn't execute 100% of the time.
+                    {
+                        Console.Write("Please re-enter your option: ");
+                        input = Console.ReadLine();
+                    }
+                }
+                return intInput;
+            }
+
             //method to search for customer and return Customer object (used in features 4 and 5 and 6)
             Customer SearchCustomer(int id) 
             {
@@ -611,6 +643,14 @@ namespace S10259842_PRG2Assignment
                 ListAllCustomers();
                 Console.Write("Select customer (enter ID to select): ");
                 Customer customer = SearchCustomer(Convert.ToInt32(Console.ReadLine()));
+                Order customerOrder = customer.CurrentOrder;
+                Console.WriteLine(customerOrder);
+                Console.Write(
+                    "[1] choose an existing ice cream object to modify \r\n" +
+                    "[2] add an entirely new ice cream object to the order \r\n" +
+                    "[3] choose an existing ice cream object to delete from the order \r\n" +
+                    "Enter your option: ");
+                int option = Convert.ToInt32(Console.ReadLine());
 
                 /*
                  * 
