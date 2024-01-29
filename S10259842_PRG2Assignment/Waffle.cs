@@ -21,8 +21,12 @@ namespace S10259842_PRG2Assignment
             set { waffleFlavour = value; }
         }
 
-        public Waffle():base()
+        public Waffle()
         {
+            Option = "Waffle";
+            Scoops = 0;
+            Flavours = new List<Flavour>();
+            Toppings = new List<Topping>();
             WaffleFlavour = null;
         }
 
@@ -75,7 +79,7 @@ namespace S10259842_PRG2Assignment
 
         public override string ToString()
         {
-            return base.ToString() + WaffleFlavour;
+            return base.ToString() + $"\nWaffle Flavour: {WaffleFlavour}";
         }
     }
 }
