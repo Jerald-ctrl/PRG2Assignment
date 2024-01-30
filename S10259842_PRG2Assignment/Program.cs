@@ -768,6 +768,9 @@ namespace S10259842_PRG2Assignment
                 {
                     Console.WriteLine("Invalid option. Please try again.");
                 }
+
+                //using switch would require an additional user entry validation using either try-catch or if-else
+                //to check that the value entered is within range. 
             }
         }
     }
