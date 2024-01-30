@@ -5,6 +5,8 @@
 //==========================================================
 
 using Microsoft.VisualBasic;
+using System;
+using System.Diagnostics.Metrics;
 using System.Text.RegularExpressions;
 
 namespace S10259842_PRG2Assignment
@@ -21,6 +23,8 @@ namespace S10259842_PRG2Assignment
             Queue<Order> goldenQueue = new Queue<Order>();
 
             Dictionary<int, Customer> customerDict = new Dictionary<int, Customer>();
+
+
 
             void InitialiseCustomers()
             {
@@ -102,20 +106,23 @@ namespace S10259842_PRG2Assignment
 
             InitialiseFlavours();
 
-
+            /*
             //Code to Test order functions
-            /*Order order1 = new Order(1,DateTime.Now);
+            Order order1 = new Order(1,DateTime.Now);
             List<Flavour> flavours = new List<Flavour>();
-            flavours.Add(new Flavour("Strawberry",false,1));
+            flavours.Add(new Flavour("Strawberry",false));
 
             List<Topping> toppings = new List<Topping>();
             toppings.Add(new Topping("Oreos")); 
             order1.AddIceCream(new Cup("Cup", 1,flavours,toppings));
             regularQueue.Enqueue(order1);
+            Console.WriteLine("hi" + order1.CalculateTotal());
 
             order1.AddIceCream(new Cup("Cup", 1, flavours, toppings));
-            order1.ModifyIceCream(1);
-            Console.WriteLine(order1.IceCreamList[1]); 
+            //order1.ModifyIceCream(1);
+            DateTime DoB = new DateTime(12 / 23 / 1232);
+            Customer customer = new Customer("John", 103021, DoB);
+            Console.WriteLine(customer.OrderHistory);
             */
 
             void DisplayMenu() //Displays the menu every iteration
@@ -128,6 +135,8 @@ namespace S10259842_PRG2Assignment
                     "[4] Create a customer’s order\r\n" +
                     "[5] Display order details of a customer\r\n" +
                     "[6] Modify order details\r\n" +
+                    "[7] Process an order and checkout \r\n" +
+                    "[8] Display monthly & total charged amounts for the year \r\n" +
                     "[0] Exit\r\n" +
                     "---------------------------------\r\n" +
                     "Enter your option: ");
@@ -140,10 +149,10 @@ namespace S10259842_PRG2Assignment
                 {
                     try
                     {
-                        intInput = Convert.ToInt16(input);
+                        intInput = Convert.ToInt32(input);
                         if (intInput < minInt || intInput > maxInt)
                         {
-                            Console.WriteLine($"Error: Input must be between 0-{maxInt}. ");
+                            Console.WriteLine($"Error: Input must be between {minInt}-{maxInt}. ");
 
                             throw new Exception();
                         }
@@ -226,9 +235,16 @@ namespace S10259842_PRG2Assignment
 
             void DisplayOrder(Order order) // Function to display all information about an order, used for Q2, Q5
             {
-                Console.WriteLine(order);
+                
+                //$"{Id,-12} {TimeReceived,-12} {TimeFulfilled,-12} {orders}";
+                Console.WriteLine($"{"Order Id",-12} {"TimeReceived",-35} {"TimeFulfilled",-35}");
+                
+                Console.WriteLine(order+"\r\n"+$"Cost = {order.CalculateTotal()}");
+                
+                /*
                 Console.WriteLine("Order Id:" + order.Id);
                 Console.WriteLine($"Time Received: {order.TimeReceived}");
+                Console.WriteLine($"Cost: {order.CalculateTotal()}");
 
                 if (order.TimeFulfilled == null)
                 {
@@ -238,7 +254,7 @@ namespace S10259842_PRG2Assignment
                 {
                     Console.WriteLine($"Time fulfilled: {order.TimeFulfilled}");
                 }
-
+                */
             }
 
             void RegisterCustomer() //basic feature 3 (Keagan)
@@ -613,23 +629,46 @@ namespace S10259842_PRG2Assignment
                 }
             }
 
-
-            void DisplayOrderDetails() //basic feature 5 (Jerald)
+            //basic feature 5 (Jerald)
+            void DisplayOrderDetails() 
             {
                 ListAllCustomers(); // List information about all Customers: 
 
-                //Code to select a Customer
+                //Code to select a Customer PLEASE ADD VALIDATION
                 // ---
-                Console.WriteLine("Input a customer ID to search: ");
-                int searchId = Convert.ToInt32(Console.ReadLine());
+                Console.Write("Input a customer ID to search: ");
+                int searchId = CheckIntInput(Console.ReadLine(),100000,999999);
                 Customer customer = SearchCustomer(searchId);
                 // ---
 
-                customer.MakeOrder();
-                foreach (Order order in customer.OrderHistory)
+                //customer.MakeOrder();
+                if (customer.CurrentOrder != null) 
                 {
-                    DisplayOrder(order); //Changed private Order currentOrder = null; in Customer.Cs
+                    Console.WriteLine(
+                    "Current Order: \r\n" +
+                    "--------------");
+
+                    DisplayOrder(customer.CurrentOrder);
                 }
+                else
+                {
+                    Console.WriteLine("Customer has no current order.");
+                }
+                if (customer.OrderHistory.Count > 0) 
+                {
+                    Console.WriteLine(
+                    "Order history: \r\n" +
+                    "--------------");
+                    foreach (Order order in customer.OrderHistory)
+                    {
+                        DisplayOrder(order); //Changed private Order currentOrder = null; in Customer.Cs
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Customer has no past orders.");
+                }
+                
 
                 /* List the customers
                  prompt user to select a customer and retrieve the selected customer
@@ -721,8 +760,191 @@ namespace S10259842_PRG2Assignment
             }
 
 
+            void ProcessOrderAndCheckout()
+            {
+                
+            }
+            
+            
+            Flavour CreateFlavour(string FlavourName)
+            {
+                if (FlavourName == "Durian" || FlavourName == "Ube" || FlavourName == "Sea Salt")
+                {
+                    return new Flavour(FlavourName,true);
+                }
+                return new Flavour(FlavourName, false);
+            }
 
 
+
+            //Read customers.csv and create corresponding IceCream objects and append to Order to customer
+            void ProcessOrdersCSV() 
+            {
+                Order newOrder = null;
+                using (StreamReader sR = new StreamReader("orders.csv"))  //Id,MemberId,TimeReceived,TimeFulfilled,Option,Scoops,Dipped,WaffleFlavour,Flavour1,Flavour2,Flavour3,Topping1,Topping2,Topping3,Topping4
+                {
+                    sR.ReadLine();
+                    string? line;
+                    IceCream iceCream = null;
+                    while ((line = sR.ReadLine()) != null)
+                    {
+                        string[] orderInfo = line.Split(",");
+                        double cost = 4;
+
+                        List<Flavour> flavours = new List<Flavour>();
+                        List<Topping> toppings = new List<Topping>();
+                        string? Flavour1 = orderInfo[8];
+                          
+                        for (int i = 8; i < 11; i++)
+                        {
+                            if (orderInfo[i] != "")
+                            {
+                                flavours.Add(CreateFlavour(orderInfo[i]));
+                            }
+
+                        }
+                        for (int i = 11; i < 15; i++)
+                        {
+                            if (orderInfo[i] != "")
+                            {
+                                toppings.Add(new Topping(orderInfo[i]));
+                            }
+
+                        }
+
+                        
+                        if (orderInfo[4] == "Cup")
+                        {
+                            
+                            iceCream = new Cup(orderInfo[4], Convert.ToInt16(orderInfo[5]),flavours,toppings);
+                            //Console.WriteLine($"Cup is {iceCream.CalculatePrice()}");
+                        }
+                        else if (orderInfo[4] == "Cone")
+                        {
+                            bool dipped = Convert.ToBoolean(orderInfo[6]);
+                            iceCream = new Cone(orderInfo[4], Convert.ToInt16(orderInfo[5]), flavours, toppings, dipped);
+                            //Console.WriteLine($"Cone is {iceCream.CalculatePrice()}");
+                        }
+                        else
+                        {
+                            string waffleFlavour = orderInfo[7];
+                            iceCream = new Waffle(orderInfo[4], Convert.ToInt16(orderInfo[5]), flavours, toppings, waffleFlavour);
+                            //Console.WriteLine($"Waffle is {iceCream.CalculatePrice()}");
+
+                        }
+                        Dictionary<int,Order> orderDict = new Dictionary<int, Order>();
+
+
+                        int orderID = Convert.ToInt32(orderInfo[0]);
+                        if (orderDict.ContainsKey(orderID) == false)
+                        {
+                            orderDict[orderID] = new Order(Convert.ToInt16(orderInfo[0]), Convert.ToDateTime(orderInfo[2]));
+                            orderDict[orderID].TimeFulfilled = Convert.ToDateTime(orderInfo[3]);
+                            Customer customer = SearchCustomer(Convert.ToInt32(orderInfo[1]));
+                            customer.OrderHistory.Add(orderDict[orderID]);
+                        }
+                        orderDict[orderID].IceCreamList.Add(iceCream);
+
+
+
+                        /*
+                        newOrder = new Order(Convert.ToInt16(orderInfo[0]), Convert.ToDateTime(orderInfo[2]));
+                        newOrder.IceCreamList.Add( iceCream );
+                        newOrder.TimeFulfilled = Convert.ToDateTime(orderInfo[3]); */
+                        
+                        
+                    }
+                   
+                }
+                
+
+            }
+
+            ProcessOrdersCSV();
+
+            void DisplayChargedAmts()
+            {
+                Console.Write("Enter the year: ");
+                int year = CheckIntInput(Console.ReadLine(),1000,DateTime.Today.Year);
+                
+                Dictionary<string, double> MonthCharged = new Dictionary<string, double>()
+                {
+                    { $"January {year}", 0 },
+                    { $"February {year}", 0 },
+                    { $"March {year}", 0 },
+                    { $"April {year}", 0 },
+                    { $"May {year}", 0 },
+                    { $"June {year}", 0 },
+                    { $"July {year}", 0 },
+                    { $"August {year}", 0 },
+                    { $"September {year}", 0 },
+                    { $"October {year}", 0 },
+                    { $"November {year}", 0 },
+                    { $"December {year}", 0 }
+                };
+
+                /*
+                using (StreamReader sR = new StreamReader("orders.csv"))  //Id,MemberId,TimeReceived,TimeFulfilled,Option,Scoops,Dipped,WaffleFlavour,Flavour1,Flavour2,Flavour3,Topping1,Topping2,Topping3,Topping4
+                {
+                    sR.ReadLine();
+                    string? line;
+                    while ((line = sR.ReadLine()) != null)
+                    {
+                        string[] orderInfo = line.Split(",");
+                        double cost = 4;
+                        if (orderInfo[4] == "Cone")
+                        {
+                            if (orderInfo[6] == "TRUE") //Check if the cone is dipped
+                            {
+                                cost += 2;
+                            }
+                        }
+
+                        DateTime timeFulfilled = DateTime.Parse(orderInfo[3]);
+                        int Month = timeFulfilled.Month;
+                        int Year = timeFulfilled.Year;
+                        string key = $"{Month} {Year}";
+
+                    }
+                */
+                foreach (KeyValuePair<int,Customer> IdCustPair in customerDict)
+                {
+                    
+                    Customer customer = IdCustPair.Value;
+                    foreach (Order order in customer.OrderHistory) 
+                    {
+                        //Console.WriteLine($"{order}");
+                        //Console.WriteLine($"CustomerID = {customer.MemberId}. OrderID = {order.Id}. Cost = {order.CalculateTotal()}.");
+                        
+
+                        
+                        string key = order.TimeFulfilled?.ToString("MMMM yyyy");
+                        
+                        if (MonthCharged.ContainsKey(key))
+                        {
+                            //Console.WriteLine(key+ order.CalculateTotal+"hi");
+                            Console.WriteLine("Matched Total", key);
+                            MonthCharged[key] += order.CalculateTotal();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Not Matched Total", key);
+                            MonthCharged.Add(key, order.CalculateTotal());
+                        }
+
+                    }
+                    
+                }
+                double annualTotal = 0;
+                foreach (KeyValuePair<string, double> MonthTotalPair in MonthCharged)
+                {
+                    Console.WriteLine($"{MonthTotalPair.Key}: {MonthTotalPair.Value}");
+                    annualTotal += MonthTotalPair.Value;
+                }
+                Console.WriteLine($"Total: {annualTotal}");
+
+
+            }
             // Testing
             string choice = "";
 
@@ -757,13 +979,21 @@ namespace S10259842_PRG2Assignment
                 {
                     ModifyOrderDetails();
                 }
+                else if (choice == "7")
+                {
+                    ProcessOrderAndCheckout();
+                }
+                else if (choice == "8")
+                {
+                    DisplayChargedAmts();
+                }
                 else if (choice == "0")
                 {
                     break;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid option. Please try again.");
+                    Console.WriteLine("Invalid option, must be an int from 0 to 8. Please try again.");
                 }
             }
         }

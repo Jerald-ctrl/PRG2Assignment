@@ -45,11 +45,11 @@ namespace S10259842_PRG2Assignment
         {
             if (Premium == true)
             {
-                return $"{Type,12} {"Yes",-12}";
+                return $"{Type} {"(Premium)"}";
             }
             else if (Premium == false)
             {
-                return $"{Type,12} {"No",-12}";
+                return $"{Type} {"(Standard)"}";
             }
             else
             {

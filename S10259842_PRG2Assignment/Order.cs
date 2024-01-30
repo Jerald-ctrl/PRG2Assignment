@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace S10259842_PRG2Assignment
 {
@@ -350,25 +351,49 @@ namespace S10259842_PRG2Assignment
         {
             iceCreamList.RemoveAt(index);
         }
-
+        
         public double CalculateTotal()
         {
             double total = 0;
             foreach (IceCream iceCream in iceCreamList)
             {
+                /*if (iceCream.Option == "Cup") 
+                {
+                    Cup cup = (Cup)iceCream;
+                    total += cup.CalculatePrice();
+                }
+                if (iceCream.Option == "Cone")
+                {
+                    Cone cone = (Cone)iceCream;
+                    total += cone.CalculatePrice();
+                }
+                if (iceCream.Option == "Waffle")
+                {
+                    Waffle waffle = (Waffle)iceCream;
+                    total += waffle.CalculatePrice();
+                }
+                */
                 total += iceCream.CalculatePrice();
+               
             }
+            Console.WriteLine($"Total for {Id} = {total}" );
             return total;
         }
 
         public override string ToString()
         {
             string? orders = "";
+            int index = 0;
             foreach (IceCream i in iceCreamList)
             {
-                orders += i.ToString() + "\n";
+                index++;
+                orders += $"Ice Cream {index}\r\n" + i.ToString() + "\r\n\r\n";
             }
-            return $"{Id, -12} {TimeReceived, -12} {TimeFulfilled, -12} {orders}";
+            if (TimeFulfilled == null)
+            {
+                return $"{Id,-12} {TimeReceived,-35} {"Order not fulfilled",-35} \r\n{orders}";
+            }
+            return $"{Id, -12} {TimeReceived, -35} {TimeFulfilled, -35}  \r\n{orders}";
         }
 
 

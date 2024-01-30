@@ -83,7 +83,7 @@ namespace S10259842_PRG2Assignment
                 toppings = "None";
             }
 
-            return $"Option: {Option} \nScoops: {Scoops} \n\n"
+            return $"Option: {Option} \nScoops: {Scoops} \n"
                 + "Flavours: " + flavours.Trim().Trim(',') + "\n"
                 + "Toppings: " + toppings.Trim().Trim(',');
         }
