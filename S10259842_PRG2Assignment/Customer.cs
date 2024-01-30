@@ -18,7 +18,7 @@ namespace S10259842_PRG2Assignment
         private string? name = null;
         private int memberId = 0;
         private DateTime dob = DateTime.Today;
-        private Order currentOrder = null;
+        private Order currentOrder = new Order();
         private List<Order> orderHistory = new List<Order>();
         private PointCard rewards = new PointCard();
 
