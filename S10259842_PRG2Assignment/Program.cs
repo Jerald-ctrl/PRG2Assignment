@@ -184,7 +184,7 @@ namespace S10259842_PRG2Assignment
 
                 try
                 {
-                    if (id.Length == 6 && id.All(char.IsDigit))
+                    if (id.Length == 6 && id.All(char.IsDigit) && id[0] != '0')
                     {
                         idToSearch = Convert.ToInt32(id);
                     }
@@ -195,7 +195,7 @@ namespace S10259842_PRG2Assignment
                 }
                 catch (FormatException f)
                 {
-                    Console.WriteLine("Member ID has to be a 6-digit number. Please try again. ");
+                    Console.WriteLine("ID has to be a 6-digit number, and cannot begin with 0. Please try again. ");
                 }
 
                 Customer customer = null;
@@ -474,7 +474,6 @@ namespace S10259842_PRG2Assignment
             void RegisterCustomer() //basic feature 3 (Keagan)
             {
                 Console.WriteLine();
-                Console.WriteLine("---------------REGISTER NEW CUSTOMER---------------");
 
                 string? newName = "";
                 int newId = 0;
@@ -485,14 +484,16 @@ namespace S10259842_PRG2Assignment
                     Console.Write("Enter name: ");
                     newName = Console.ReadLine();
 
-                    if (newName.Any(char.IsNumber) || newName.Any(char.IsSymbol))
+                    if (newName.All(char.IsLetter) && newName != "")
+                    {
+                        break;
+                    }
+                    else
                     {
                         Console.WriteLine($"Invalid name. Please try again. ");
                         Console.WriteLine();
                         continue;
                     }
-
-                    break;
                 }
 
                 while (true)
@@ -502,7 +503,7 @@ namespace S10259842_PRG2Assignment
                         Console.Write("Enter ID: ");
                         string? id = Console.ReadLine();
 
-                        if (id.Length == 6 && id.All(char.IsDigit))
+                        if (id.Length == 6 && id.All(char.IsDigit) && id[0] != '0')
                         {
                             newId = Convert.ToInt32(id);
                             break;
@@ -514,7 +515,7 @@ namespace S10259842_PRG2Assignment
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("ID has to be a 6-digit number. Please try again. ");
+                        Console.WriteLine("ID has to be a 6-digit number, and cannot begin with 0. Please try again. ");
                         Console.WriteLine();
                     }
                 }
@@ -601,7 +602,7 @@ namespace S10259842_PRG2Assignment
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("ID has to be a 6-digit number. Please try again. ");
+                        Console.WriteLine("ID has to be a 6-digit number, and cannot begin with 0. Please try again. ");
                         Console.WriteLine();
                     }
                     catch (Exception)
