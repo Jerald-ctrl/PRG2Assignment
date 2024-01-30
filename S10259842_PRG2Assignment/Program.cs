@@ -22,9 +22,10 @@ namespace S10259842_PRG2Assignment
             Queue<Order> regularQueue = new Queue<Order>();
             Queue<Order> goldenQueue = new Queue<Order>();
 
+            Customer currentCustomer = null; //will be set to the current customer making the order; will be used to process advanced feature (a) 
+
+
             Dictionary<int, Customer> customerDict = new Dictionary<int, Customer>();
-
-
 
             void InitialiseCustomers()
             {
@@ -126,6 +127,7 @@ namespace S10259842_PRG2Assignment
             Console.WriteLine(customer.OrderHistory);
             */
 
+
             void DisplayMenu() //Displays the menu every iteration
             {
                 Console.Write("" +
@@ -177,7 +179,7 @@ namespace S10259842_PRG2Assignment
             }
 
 
-            //method to search for customer and return Customer object (used in features 4 and 5 and 6)
+            //method to search for customer and return Customer object (used in features 4, 5 and 6)
             Customer SearchCustomer(string id) 
             {
                 int idToSearch = 0;
@@ -216,185 +218,164 @@ namespace S10259842_PRG2Assignment
             {
                 IceCream iceCream = null;
 
-                while (true) //loop to allow user to add ice creams to order until user decides to stop
+                Console.WriteLine("What would you like today? ");
+                Console.WriteLine("[1] Cup");
+                Console.WriteLine("[2] Cone");
+                Console.WriteLine("[3] Waffle");
+
+                Console.WriteLine();
+
+                int newOption = 0;
+                Console.Write("Enter your option: ");
+
+                newOption = CheckIntInput(Console.ReadLine(), 1, 3);
+                Console.WriteLine();
+
+                //downcasting the IceCream object to one of its subclasses depending on the user's selection
+
+                if (newOption == 1)
                 {
-                    Console.WriteLine("What would you like today? ");
-                    Console.WriteLine("[1] Cup");
-                    Console.WriteLine("[2] Cone");
-                    Console.WriteLine("[3] Waffle");
+                    iceCream = new Cup();
+                }
+                else if (newOption == 2)
+                {
+                    iceCream = new Cone();
+                }
+                else if (newOption == 3)
+                {
+                    iceCream = new Waffle();
+                }
+                //no need to handle error of incorrect input as newOption has already been checked to be within range using the CheckIntInput method;
+                //hence newIceCream will not return null. 
 
-                    Console.WriteLine();
-
-                    int newOption = 0;
-                    Console.Write("Enter your option: ");
-
-                    newOption = CheckIntInput(Console.ReadLine(), 1, 3);
-                    Console.WriteLine();
-
-                    //downcasting the IceCream object to one of its subclasses depending on the user's selection
-
-                    if (newOption == 1)
+                if (newOption == 1)
+                {
+                    Console.WriteLine($"{"Option",-12} {"Scoops",-12} {"Cost",-12}");
+                    foreach (string cup in cupList)
                     {
-                        iceCream = new Cup();
+                        Console.WriteLine(cup);
                     }
-                    else if (newOption == 2)
-                    {
-                        iceCream = new Cone();
-                    }
-                    else if (newOption == 3)
-                    {
-                        iceCream = new Waffle();
-                    }
-                    //no need to handle error of incorrect input as newOption has already been checked to be within range using the CheckIntInput method;
-                    //hence newIceCream will not return null. 
+                }
 
-                    if (newOption == 1)
+                else if (newOption == 2)
+                {
+                    Console.WriteLine($"{"Option",-12} {"Scoops",-12} {"Dipped",-12} {"Cost",-12}");
+                    foreach (string cone in coneList)
                     {
-                        Console.WriteLine($"{"Option",-12} {"Scoops",-12} {"Cost",-12}");
-                        foreach (string cup in cupList)
+                        Console.WriteLine(cone);
+                    }
+                }
+
+                else if (newOption == 3)
+                {
+                    Console.WriteLine($"{"Option",-12} {"Scoops",-10} {"Waffle Flavour",-15} {"Cost",-12}");
+                    foreach (string waffle in waffleList)
+                    {
+                        Console.WriteLine(waffle);
+                    }
+                }
+
+
+                Console.WriteLine();
+
+                int selectedScoops = 0;
+                while (true) //try-catch block for error handling for user input for number of scoops
+                {
+                    try
+                    {
+                        Console.Write("Enter number of scoops: ");
+                        selectedScoops = Convert.ToInt32(Console.ReadLine());
+
+                        if (selectedScoops > 3) //using if-else statements to check for ArgumentOutOfRange exception, because different error messages are required
                         {
-                            Console.WriteLine(cup);
+                            Console.WriteLine("Items can have a maximum of 3 scoops. Please try again. ");
+                            continue;
                         }
-                    }
-
-                    else if (newOption == 2)
-                    {
-                        Console.WriteLine($"{"Option",-12} {"Scoops",-12} {"Dipped",-12} {"Cost",-12}");
-                        foreach (string cone in coneList)
+                        else if (selectedScoops < 1)
                         {
-                            Console.WriteLine(cone);
+                            Console.WriteLine("Items must have a minimum of 1 scoop. Please try again. ");
+                            continue;
                         }
+                        break;
+                    }
+                    catch (FormatException f)
+                    {
+                        Console.WriteLine(f.Message + " Please enter a number from 1 to 3. ");
+                        Console.WriteLine();
                     }
 
-                    else if (newOption == 3)
+                }
+
+                iceCream.Scoops = selectedScoops; //sets selected number of scoops to the ice cream order
+
+
+
+                for (int i = 0; i < selectedScoops; i++) //for loop loops as many times as the amount of scoops desired
+                {
+                    while (true) //while loop ensures flavour entered is valid before proceeding to the user's next flavour entry; if not, it will loop until flavour entered is valid. 
                     {
-                        Console.WriteLine($"{"Option",-12} {"Scoops",-10} {"Waffle Flavour",-15} {"Cost",-12}");
-                        foreach (string waffle in waffleList)
+                        Console.WriteLine();
+                        Console.WriteLine("Flavours: ");
+
+                        int count = 1;
+                        foreach (string flavour in flavourList)
                         {
-                            Console.WriteLine(waffle);
+                            if (flavour == "Durian" || flavour == "Ube" || flavour == "Sea salt")
+                            {
+                                Console.WriteLine($"[{count}] {flavour} (Premium)");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"[{count}] {flavour}");
+                            }
+
+                            count++;
                         }
-                    }
 
+                        Console.WriteLine();
 
-                    Console.WriteLine();
-
-                    int selectedScoops = 0;
-                    while (true) //try-catch block for error handling for user input for number of scoops
-                    {
                         try
                         {
-                            Console.Write("Enter number of scoops: ");
-                            selectedScoops = Convert.ToInt32(Console.ReadLine());
+                            Console.Write($"Enter flavour {i + 1}: ");
+                            int option = Convert.ToInt32(Console.ReadLine()) - 1;
 
-                            if (selectedScoops > 3) //using if-else statements to check for ArgumentOutOfRange exception, because different error messages are required
+                            Flavour selectedFlavour = new Flavour();
+                            bool found = false;
+
+                            foreach (string flavour in flavourList)
                             {
-                                Console.WriteLine("Items can have a maximum of 3 scoops. Please try again. ");
+                                if (flavourList[option].ToLower() == flavour.ToLower())
+                                {
+                                    if (flavourList[option] == "Durian" || flavourList[option] == "Ube" || flavourList[option] == "Sea salt")
+                                    {
+                                        selectedFlavour = new Flavour(flavourList[option], true);
+                                    }
+                                    else
+                                    {
+                                        selectedFlavour = new Flavour(flavourList[option], false);
+                                    }
+
+                                    iceCream.Flavours.Add(selectedFlavour);
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (found == false)
+                            {
+                                Console.WriteLine("Invalid flavour. Please try again. ");
+                                Console.WriteLine();
                                 continue;
                             }
-                            else if (selectedScoops < 1)
-                            {
-                                Console.WriteLine("Items must have a minimum of 1 scoop. Please try again. ");
-                                continue;
-                            }
+
                             break;
+
                         }
                         catch (FormatException f)
                         {
-                            Console.WriteLine(f.Message + " Please enter a number from 1 to 3. ");
+                            Console.WriteLine($"{f.Message} Please enter a number from 1 to {flavourList.Count}");
                             Console.WriteLine();
                         }
-
-                    }
-
-                    iceCream.Scoops = selectedScoops; //sets selected number of scoops to the ice cream order
-
-
-
-                    for (int i = 0; i < selectedScoops; i++) //for loop loops as many times as the amount of scoops desired
-                    {
-                        while (true) //while loop ensures flavour entered is valid before proceeding to the user's next flavour entry; if not, it will loop until flavour entered is valid. 
-                        {
-                            Console.WriteLine();
-                            Console.WriteLine("Flavours: ");
-
-                            int count = 1;
-                            foreach (string flavour in flavourList)
-                            {
-                                if (flavour == "Durian" || flavour == "Ube" || flavour == "Sea salt")
-                                {
-                                    Console.WriteLine($"[{count}] {flavour} (Premium)");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"[{count}] {flavour}");
-                                }
-
-                                count++;
-                            }
-
-                            Console.WriteLine();
-
-                            try
-                            {
-                                Console.Write($"Enter flavour {i + 1}: ");
-                                int option = Convert.ToInt32(Console.ReadLine()) - 1;
-
-                                Flavour selectedFlavour = new Flavour();
-                                bool found = false;
-
-                                foreach (string flavour in flavourList)
-                                {
-                                    if (flavourList[option].ToLower() == flavour.ToLower())
-                                    {
-                                        if (flavourList[option] == "Durian" || flavourList[option] == "Ube" || flavourList[option] == "Sea salt")
-                                        {
-                                            selectedFlavour = new Flavour(flavourList[option], true);
-                                        }
-                                        else
-                                        {
-                                            selectedFlavour = new Flavour(flavourList[option], false);
-                                        }
-
-                                        iceCream.Flavours.Add(selectedFlavour);
-                                        found = true;
-                                        break;
-                                    }
-                                }
-
-                                if (found == false)
-                                {
-                                    Console.WriteLine("Invalid flavour. Please try again. ");
-                                    Console.WriteLine();
-                                    continue;
-                                }
-
-                                break;
-
-                            }
-                            catch (FormatException f)
-                            {
-                                Console.WriteLine($"{f.Message} Please enter a number from 1 to {flavourList.Count}");
-                                Console.WriteLine();
-                            }
-                        }
-                    }
-
-
-                    int continueOption = 0;
-
-                    Console.WriteLine("Would you like to add another order: "); //prompt user if they would like to continue
-                    Console.WriteLine("[1] Yes");
-                    Console.WriteLine("[2] No");
-
-                    continueOption = CheckIntInput(Console.ReadLine(), 1, 2);
-
-                    if (continueOption == 1)
-                    {
-                        continue;
-                    }
-                    else if (continueOption == 2)
-                    {
-                        break;
                     }
                 }
 
@@ -585,9 +566,10 @@ namespace S10259842_PRG2Assignment
 
                 while (true) //try-catch block for error handling for ID user input
                 {
+                    Console.Write("Select customer (enter ID to select): ");
+
                     try
                     {
-                        Console.Write("Select customer (enter ID to select): ");
                         string? id = Console.ReadLine();
 
                         selectedCustomer = SearchCustomer(id);
@@ -600,11 +582,6 @@ namespace S10259842_PRG2Assignment
                         Console.WriteLine();
                         break;
                     }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("ID has to be a 6-digit number, and cannot begin with 0. Please try again. ");
-                        Console.WriteLine();
-                    }
                     catch (Exception)
                     {
                         Console.WriteLine("Customer not found. Please try again");
@@ -614,10 +591,30 @@ namespace S10259842_PRG2Assignment
 
                 Order newOrder = new Order();
 
-                IceCream newIceCream = OrderIceCream();
+                while (true)
+                {
+                    IceCream newIceCream = OrderIceCream();
+                    newOrder.AddIceCream(newIceCream);
 
-                newOrder.AddIceCream(newIceCream);
-                Console.WriteLine(newIceCream);
+                    int continueOption = 0;
+
+                    Console.WriteLine("Would you like to add another order: "); //prompt user if they would like to continue
+                    Console.WriteLine("[1] Yes");
+                    Console.WriteLine("[2] No");
+
+                    continueOption = CheckIntInput(Console.ReadLine(), 1, 2);
+
+                    if (continueOption == 1)
+                    {
+                        continue;
+                    }
+                    else if (continueOption == 2)
+                    {
+                        break;
+                    }
+                }
+
+                currentCustomer = selectedCustomer; //the current customer making the order
             }
 
 
@@ -752,12 +749,81 @@ namespace S10259842_PRG2Assignment
             }
 
 
-            void ProcessOrderAndCheckout()
+            void ProcessOrderAndCheckout(string customerId) //advanced feature a (Keagan)
             {
-                
+                if (currentCustomer != null)
+                {
+                    Order currentOrder = new Order();
+
+                    if (goldenQueue.Count != 0) //if there are any orders in the gold members' queue, then its first order will be processed
+                    {
+                        currentOrder = goldenQueue.Dequeue();
+                    }
+                    else //if there are no gold member orders, then the regular queue's first order will be processed
+                    {
+                        currentOrder = regularQueue.Dequeue();
+                    }
+
+
+                    foreach (IceCream i in currentOrder.IceCreamList) //display all orders in the current order being processed
+                    {
+                        Console.WriteLine(i);
+                    }
+
+
+                    double totalBill = 0;
+                    List<double> orderPrices = new List<double>(); //to store the prices of each ice cream in the order, to make calculations for total bill subtraction due to PunchCard or Birthday discount easier to process
+
+                    foreach (IceCream i in currentOrder.IceCreamList)
+                    {
+                        double price = i.CalculatePrice();
+                        orderPrices.Add(price);
+                        totalBill += price;
+                    }
+
+
+                    Console.WriteLine($"Your membership status: {currentCustomer.Rewards.Tier}"); //displaying customer's membership status
+                    Console.WriteLine($"Your membership points: {currentCustomer.Rewards.Points}"); //displaying customer's membership points
+
+
+                    if (DateTime.Today == currentCustomer.Dob)
+                    {
+                        double highestPrice = 0;
+                        foreach (double price in orderPrices)
+                        {
+                            if (price > highestPrice)
+                            {
+                                highestPrice = price;
+                            }
+                        }
+
+                        totalBill -= highestPrice;
+                        Console.WriteLine("Happy Birthday! Your most expensive order today is free of charge!");
+                    }
+
+
+                    if (currentCustomer.Rewards.PunchCard == 10)
+                    {
+                        totalBill -= orderPrices[0];
+                        currentCustomer.Rewards.PunchCard = 0;
+                    }
+
+
+                    if (currentCustomer.Rewards.Tier == "Silver" || currentCustomer.Rewards.Tier == "Gold")
+                    {
+
+                    }
+
+
+                }
+                else
+                {
+                    Console.WriteLine("You have not made an order. Please make an order first. ");
+                }
             }
-            
-            
+
+
+
             Flavour CreateFlavour(string FlavourName)
             {
                 if (FlavourName == "Durian" || FlavourName == "Ube" || FlavourName == "Sea Salt")
@@ -854,7 +920,7 @@ namespace S10259842_PRG2Assignment
 
             ProcessOrdersCSV();
 
-            void DisplayChargedAmts()
+            void DisplayChargedAmts() //advanced feature b (Jerald)
             {
                 Console.Write("Enter the year: ");
                 int year = CheckIntInput(Console.ReadLine(),1000,DateTime.Today.Year);
@@ -966,7 +1032,7 @@ namespace S10259842_PRG2Assignment
                         ModifyOrderDetails();
                         break;
                     case 7:
-                        ProcessOrderAndCheckout();
+                        ProcessOrderAndCheckout(currentCustomer.MemberId.ToString());
                         break;
                     case 8:
                         DisplayChargedAmts();
