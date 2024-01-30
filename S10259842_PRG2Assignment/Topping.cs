@@ -14,8 +14,8 @@ namespace S10259842_PRG2Assignment
 {
     class Topping
     {
-        private string type;
-        public string Type
+        private string? type;
+        public string? Type
         {
             get { return type; }
             set { type = value; }
