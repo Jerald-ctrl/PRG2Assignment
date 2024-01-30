@@ -446,9 +446,8 @@ namespace S10259842_PRG2Assignment
                 }
 
 
-                Console.WriteLine("Would you like toppings? ");
-                string? choice = Console.ReadLine();
-                int option = ProcessYesNo(choice);
+                Console.Write("Would you like toppings? ");
+                int option = ProcessYesNo(Console.ReadLine());
 
                 if (option == 1)
                 {
@@ -483,9 +482,8 @@ namespace S10259842_PRG2Assignment
 
                         if (count < 3) //count = 3 is the 4th and final allowed iteration
                         {
-                            Console.WriteLine("Would you like to add more toppings: "); //prompt user if they would like to add more toppings; loop will continue if yes, and break if no
-                            string? addChoice = Console.ReadLine();
-                            int addMoreToppings = ProcessYesNo(addChoice);
+                            Console.Write("Would you like to add more toppings: "); //prompt user if they would like to add more toppings; loop will continue if yes, and break if no
+                            int addMoreToppings = ProcessYesNo(Console.ReadLine());
 
                             if (addMoreToppings == 1)
                             {
@@ -587,7 +585,7 @@ namespace S10259842_PRG2Assignment
                 while (true)
                 {
                     Console.Write("Enter name: ");
-                    newName = Console.ReadLine();
+                    newName = Console.ReadLine().TrimEnd(' ');
 
                     if (newName.All(char.IsLetter) && newName != "")
                     {
@@ -610,8 +608,24 @@ namespace S10259842_PRG2Assignment
 
                         if (id.Length == 6 && id.All(char.IsDigit) && id[0] != '0')
                         {
-                            newId = Convert.ToInt32(id);
-                            break;
+                            bool idAlreadyTaken = false;
+                            foreach (KeyValuePair<int, Customer> c in customerDict)
+                            {
+                                if (c.Key == Convert.ToInt32(id))
+                                {
+                                    idAlreadyTaken = true;
+                                    break;
+                                }
+                            }
+                            if (idAlreadyTaken == true)
+                            {
+                                throw new Exception();
+                            }
+                            else
+                            {
+                                newId = Convert.ToInt32(id);
+                                break;
+                            }
                         }
                         else
                         {
@@ -621,6 +635,11 @@ namespace S10259842_PRG2Assignment
                     catch (FormatException)
                     {
                         Console.WriteLine("ID has to be a 6-digit number, and cannot begin with 0. Please try again. ");
+                        Console.WriteLine();
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("This ID number is already taken. Please enter a different ID number. ");
                         Console.WriteLine();
                     }
                 }
@@ -638,7 +657,16 @@ namespace S10259842_PRG2Assignment
                     {
                         if (dateMatch.Success)
                         {
-                            newDob = Convert.ToDateTime(date);
+                            if (Convert.ToDateTime(date) < DateTime.Today)
+                            {
+                                newDob = Convert.ToDateTime(date);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Future date entered. Please enter a valid Date of Birth. ");
+                                Console.WriteLine();
+                                continue;
+                            }
                         }
                         else
                         {
@@ -722,10 +750,9 @@ namespace S10259842_PRG2Assignment
 
                     int continueOption = 0;
 
-                    Console.WriteLine("Would you like to add another order: "); //prompt user if they would like to continue
+                    Console.Write("Would you like to add another order: "); //prompt user if they would like to continue
 
-                    string? choice = Console.ReadLine();
-                    continueOption = ProcessYesNo(choice);
+                    continueOption = ProcessYesNo(Console.ReadLine());
 
                     if (continueOption == 1)
                     {
@@ -884,11 +911,11 @@ namespace S10259842_PRG2Assignment
             }
 
 
-            void ProcessOrderAndCheckout(string customerId) //advanced feature a (Keagan)
+            void ProcessOrderAndCheckout(Customer customer) //advanced feature a (Keagan)
             {
-                if (currentCustomer != null)
+                if (customer != null)
                 {
-                    Order currentOrder = new Order();
+                    Order currentOrder = new Order(); //sets current order to a new Order instance until it is set again to an actual Customer's order in the code below
 
                     if (goldenQueue.Count != 0) //if there are any orders in the gold members' queue, then its first order will be processed
                     {
@@ -917,11 +944,11 @@ namespace S10259842_PRG2Assignment
                     }
 
 
-                    Console.WriteLine($"Your membership status: {currentCustomer.Rewards.Tier}"); //displaying customer's membership status
-                    Console.WriteLine($"Your membership points: {currentCustomer.Rewards.Points}"); //displaying customer's membership points
+                    Console.WriteLine($"Your membership status: {customer.Rewards.Tier}"); //displaying customer's membership status
+                    Console.WriteLine($"Your membership points: {customer.Rewards.Points}"); //displaying customer's membership points
 
 
-                    if (currentCustomer.IsBirthday())
+                    if (customer.IsBirthday())
                     {
                         double highestPrice = 0;
                         foreach (double price in orderPrices)
@@ -937,36 +964,44 @@ namespace S10259842_PRG2Assignment
                     }
 
 
-                    if (currentCustomer.Rewards.PunchCard == 10)
+                    if (customer.Rewards.PunchCard == 10)
                     {
                         Console.WriteLine("You have completed your Punch Card! Your first ice cream in your order is now free of charge. ");
                         totalBill -= orderPrices[0];
-                        currentCustomer.Rewards.PunchCard = 0;
+                        customer.Rewards.PunchCard = 0;
                     }
 
 
-                    if (currentCustomer.Rewards.Tier == "Silver" || currentCustomer.Rewards.Tier == "Gold")
+                    if ((customer.Rewards.Tier == "Silver" || customer.Rewards.Tier == "Gold") && customer.Rewards.Points > 0)
                     {
-                        Console.WriteLine("Redeem PointCard points? ");
+                        Console.Write("Redeem PointCard points? ");
 
                         string? choice = Console.ReadLine();
-                        int option = ProcessYesNo(choice);
+                        int option = ProcessYesNo(Console.ReadLine());
 
                         if (option == 1)
                         {
                             Console.WriteLine("Enter points to use: ");
-                            int points = Convert.ToInt32(Console.ReadLine());
+                            string? points = Console.ReadLine();
 
-                            double pointDiscount = points * 0.02;
+                            double pointsToUse = CheckIntInput(points, 1, customer.Rewards.Points);
+
+
+
+                            double pointDiscount = pointsToUse * 0.02;
                             totalBill -= pointDiscount;
                         }
                     }
 
+                    Console.WriteLine($"Final Bill: {totalBill:C}");
+                    Console.WriteLine("Press any key to make payment. ");
+                    Console.ReadLine();
 
-                }
-                else
-                {
-                    Console.WriteLine("You have not made an order. Please make an order first. ");
+                    foreach (IceCream i in currentOrder.IceCreamList)
+                    {
+                        customer.Rewards.Punch();
+                    }
+
                 }
             }
 
@@ -1180,7 +1215,15 @@ namespace S10259842_PRG2Assignment
                         ModifyOrderDetails();
                         break;
                     case 7:
-                        ProcessOrderAndCheckout(currentCustomer.MemberId.ToString());
+                        if (currentCustomer != null)
+                        {
+                            ProcessOrderAndCheckout(currentCustomer);
+                        }
+                        else
+                        {
+                            Console.WriteLine("You have not made an order. Please make an order before making payment. ");
+                            Console.WriteLine();
+                        }
                         break;
                     case 8:
                         DisplayChargedAmts();
