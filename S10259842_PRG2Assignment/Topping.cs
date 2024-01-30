@@ -33,7 +33,7 @@ namespace S10259842_PRG2Assignment
 
         public override string ToString()
         {
-            return $"{Type, -12}";
+            return $"{Type}";
         }
     }
 }
