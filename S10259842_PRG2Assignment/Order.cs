@@ -77,7 +77,7 @@ namespace S10259842_PRG2Assignment
                     Console.Write("Please re-enter your option: ");
                     input = Console.ReadLine();
                 }
-                catch (Exception ex) //Acts like a finally block but doesn't execute 100% of the time.
+                catch (Exception) //Acts like a finally block but doesn't execute 100% of the time.
                 {
                     Console.Write("Please re-enter your option: ");
                     input = Console.ReadLine();
