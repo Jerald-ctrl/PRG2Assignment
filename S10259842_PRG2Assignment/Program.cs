@@ -272,7 +272,7 @@ namespace S10259842_PRG2Assignment
                         Console.Write("Enter ID: ");
                         string? id = Console.ReadLine();
 
-                        if (id.Length == 6)
+                        if (id.Length == 6 && id.All(char.IsDigit))
                         {
                             newId = Convert.ToInt32(id);
                             break;
@@ -291,15 +291,15 @@ namespace S10259842_PRG2Assignment
 
                 while (true) 
                 {
+                    Console.Write("Enter Date of Birth (DD/MM/YYYY): ");
+                    string? date = Console.ReadLine();
+
+                    Regex dateFormat = new Regex(@"^(\d\d)/(\d\d)/(\d\d\d\d)$");
+
+                    Match dateMatch = dateFormat.Match(date);
+
                     try
                     {
-                        Console.Write("Enter Date of Birth (DD/MM/YYYY): ");
-                        string? date = Console.ReadLine();
-
-                        Regex dateFormat = new Regex(@"^(\d\d)/(\d\d)/(\d\d\d\d)$");
-
-                        Match dateMatch = dateFormat.Match(date);
-
                         if (dateMatch.Success)
                         {
                             newDob = Convert.ToDateTime(date);
@@ -311,12 +311,11 @@ namespace S10259842_PRG2Assignment
 
                         break;
                     }
-
                     catch (FormatException f)
                     {
                         Console.WriteLine(f.Message);
-                        Console.WriteLine();
                     }
+
                     catch (Exception)
                     {
                         Console.WriteLine($"Date of Birth was not in correct format DD/MM/YYYY. Please try again. ");
@@ -325,6 +324,8 @@ namespace S10259842_PRG2Assignment
                 }
 
                 Customer newCustomer = new Customer(newName, newId, newDob);
+                customerDict.Add(newId, newCustomer);
+
                 PointCard newCard = new PointCard();
                 newCustomer.Rewards = newCard;
 
@@ -335,6 +336,8 @@ namespace S10259842_PRG2Assignment
                 }
 
                 Console.WriteLine();
+                Console.WriteLine($"Customer Details: \nName: {newName} \nMember ID: {newId} \nDate of Birth: {newDob.ToString("dd/MM/yyyy")} \r\n");
+                //Console.WriteLine();
                 Console.WriteLine("New customer successfully registered!");
                 Console.WriteLine();
             }
