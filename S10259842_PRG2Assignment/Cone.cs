@@ -70,7 +70,7 @@ namespace S10259842_PRG2Assignment
             {
                 totalPrice += 1;
             }
-
+            
             return totalPrice;
         }
 

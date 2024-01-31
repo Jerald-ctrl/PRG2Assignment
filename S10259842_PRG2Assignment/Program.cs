@@ -128,7 +128,7 @@ namespace S10259842_PRG2Assignment
             */
 
 
-            void DisplayMenu() //Displays the menu every iteration
+            void DisplayMenu() //Displays the menu every iteration, written by Jerald
             {
                 Console.Write("" +
                     "------------- MENU --------------\r\n" +
@@ -146,7 +146,7 @@ namespace S10259842_PRG2Assignment
             }
             
 
-            int CheckIntInput(string input,int minInt, int maxInt) //checks that input is INT and is 0 < x < maxInt
+            int CheckIntInput(string input,int minInt, int maxInt) //checks that input is INT and is 0 < x < maxInt, Written by Jerald
             {
                 int intInput = 0;
                 while (true)
@@ -179,7 +179,7 @@ namespace S10259842_PRG2Assignment
             }
 
 
-            int ProcessYesNo(string choice) //method to process all yes/no choices
+            int ProcessYesNo(string choice) //method to process all yes/no choices, Written by Keagan
             {
                 Console.WriteLine("[1] Yes");
                 Console.WriteLine("[2] No");
@@ -192,6 +192,7 @@ namespace S10259842_PRG2Assignment
 
 
             //method to search for customer and return Customer object (used in features 4, 5 and 6)
+            /*
             Customer SearchCustomer(string id) 
             {
                 int idToSearch = 0;
@@ -224,7 +225,54 @@ namespace S10259842_PRG2Assignment
 
                 return customer;
             }
+            */
+            Customer SearchCustomer(string id) //Written by Keagan
+            {
+                int idToSearch = 0;
+                while (true)
+                {
+                    try
+                    {
+                        
+                        if (id.Length == 6 && id.All(char.IsDigit) && id[0] != '0' && id[0] != '-')
+                        {
+                            idToSearch = Convert.ToInt32(id);
+                        }
+                        else
+                        {
+                            throw new FormatException();
+                        }
+                        Customer customer = null;
+                        foreach (KeyValuePair<int, Customer> c in customerDict)
+                        {
+                            if (idToSearch == c.Value.MemberId)
+                            {
+                                customer = c.Value;
+                                
+                                return customer;
 
+                            }
+                        }
+                        Console.WriteLine("Customer ID not found. Please reinput.");
+                    }
+                    catch (FormatException f)
+                    {
+                        Console.WriteLine("ID has to be a positive 6-digit number, and cannot begin with 0. Please try again. ");
+                    }
+                    
+                    Console.Write("Select customer (enter ID to select): ");
+                    id = Console.ReadLine();
+                }
+
+
+
+
+                
+            }
+                
+
+               
+            
 
             IceCream OrderIceCream() //ice cream order process
             {
@@ -406,11 +454,11 @@ namespace S10259842_PRG2Assignment
 
                     if (ConeOption == 1)
                     {
-                        c.Dipped = true;
+                        c.Dipped = false;
                     }
                     else if (ConeOption == 2)
                     {
-                        c.Dipped = false;
+                        c.Dipped = true;
                     }
                 }
 
@@ -504,7 +552,38 @@ namespace S10259842_PRG2Assignment
                 return iceCream;
             }
 
-            /*--------------------------------------------------------FEATURES--------------------------------------------------------*/
+            void DisplayOrder(Order order) // Function to display all information about an order, used for Q2, Q5
+            {
+
+                //$"{Id,-12} {TimeReceived,-12} {TimeFulfilled,-12} {orders}";
+                Console.WriteLine($"{"Order Id",-12} {"TimeReceived",-35} {"TimeFulfilled",-35}");
+
+                Console.WriteLine(order);
+
+                /*
+                Console.WriteLine("Order Id:" + order.Id);
+                Console.WriteLine($"Time Received: {order.TimeReceived}");
+                Console.WriteLine($"Cost: {order.CalculateTotal()}");
+
+                if (order.TimeFulfilled == null)
+                {
+                    Console.WriteLine("Order is currently not fulfilled.");
+                }
+                else
+                {
+                    Console.WriteLine($"Time fulfilled: {order.TimeFulfilled}");
+                }
+                */
+            }
+            Customer SelectCustomer(string customerID)
+            {
+                Customer selectedCustomer = SearchCustomer(customerID);
+                Console.WriteLine($"Selected customer: {selectedCustomer.Name} (ID: {selectedCustomer.MemberId})");
+                return selectedCustomer;
+            }
+
+
+            /*--------------------------------------------------------FEATURES----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
             void ListAllCustomers() //basic feature 1 (Keagan)
@@ -548,30 +627,6 @@ namespace S10259842_PRG2Assignment
                     }
                 }
 
-            }
-
-            void DisplayOrder(Order order) // Function to display all information about an order, used for Q2, Q5
-            {
-                
-                //$"{Id,-12} {TimeReceived,-12} {TimeFulfilled,-12} {orders}";
-                Console.WriteLine($"{"Order Id",-12} {"TimeReceived",-35} {"TimeFulfilled",-35}");
-                
-                Console.WriteLine(order+"\r\n"+$"Cost = {order.CalculateTotal()}");
-                
-                /*
-                Console.WriteLine("Order Id:" + order.Id);
-                Console.WriteLine($"Time Received: {order.TimeReceived}");
-                Console.WriteLine($"Cost: {order.CalculateTotal()}");
-
-                if (order.TimeFulfilled == null)
-                {
-                    Console.WriteLine("Order is currently not fulfilled.");
-                }
-                else
-                {
-                    Console.WriteLine($"Time fulfilled: {order.TimeFulfilled}");
-                }
-                */
             }
 
             void RegisterCustomer() //basic feature 3 (Keagan)
@@ -704,9 +759,8 @@ namespace S10259842_PRG2Assignment
                 //Console.WriteLine();
                 Console.WriteLine("New customer successfully registered!");
                 Console.WriteLine();
+               
             }
-
-
 
             void CreateCustomerOrder() //basic feature 4 (Keagan)
             {
@@ -714,8 +768,12 @@ namespace S10259842_PRG2Assignment
                 ListAllCustomers();
 
                 int selectedId = 0;
+                Console.Write("Select customer (enter ID to select): ");
+                Customer selectedCustomer = SelectCustomer(Console.ReadLine());
+                
+                /*
                 Customer selectedCustomer = null;
-
+                
                 while (true) //try-catch block for error handling for ID user input
                 {
                     Console.Write("Select customer (enter ID to select): ");
@@ -740,9 +798,9 @@ namespace S10259842_PRG2Assignment
                         Console.WriteLine();
                     }
                 }
-
+                */
                 Order newOrder = selectedCustomer.MakeOrder();
-
+                
                 while (true)
                 {
                     IceCream newIceCream = OrderIceCream();
@@ -779,7 +837,7 @@ namespace S10259842_PRG2Assignment
                 Console.WriteLine("Order made successfully. Please proceed to checkout. ");
             }
 
-
+           
             //basic feature 5 (Jerald)
             void DisplayOrderDetails() 
             {
@@ -788,8 +846,7 @@ namespace S10259842_PRG2Assignment
                 //Code to select a Customer PLEASE ADD VALIDATION
                 // ---
                 Console.Write("Input a customer ID to search: ");
-                string? id = Console.ReadLine();
-                Customer customer = SearchCustomer(id);
+                Customer customer = SelectCustomer(Console.ReadLine());
                 // ---
 
                 //customer.MakeOrder();
@@ -831,10 +888,45 @@ namespace S10259842_PRG2Assignment
             void ModifyOrderDetails() //basic feature 6 (Jerald)
             {
                 ListAllCustomers();
+                /*
+                while (true) //try-catch block for error handling for ID user input
+                {
+                    Console.Write("Select customer (enter ID to select): ");
+
+                    try
+                    {
+                        string? id = Console.ReadLine();
+
+                        selectedCustomer = SearchCustomer(id);
+                        if (selectedCustomer == null)
+                        {
+                            throw new Exception();
+                        }
+
+                        Console.WriteLine($"Selected customer: {selectedCustomer.Name} (ID: {selectedCustomer.MemberId})");
+                        Console.WriteLine();
+                        break;
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Customer not found. Please try again");
+                        Console.WriteLine();
+                    }
+                }
+                */
+
                 Console.Write("Select customer (enter ID to select): ");
-                Customer customer = SearchCustomer(Console.ReadLine());
-                Order currentOrder = customer.CurrentOrder;
+                Customer selectedCustomer = SelectCustomer(Console.ReadLine());
+                
+
+                if (selectedCustomer.CurrentOrder == null)
+                {
+                    Console.WriteLine("Selected customer has no order, Please create an order first.");
+                    return;
+                }
+                Order currentOrder = selectedCustomer.CurrentOrder;
                 Console.WriteLine(currentOrder); //List all the ice cream information in the order
+
                 int option = 0;
                
                     Console.Write(
@@ -845,7 +937,7 @@ namespace S10259842_PRG2Assignment
                    "Enter your option: ");
                     option = CheckIntInput(Console.ReadLine(), 0, 3);
 
-
+                
                 int iceCreamListCount = currentOrder.IceCreamList.Count();
                 if (option == 0)
                 {
@@ -855,7 +947,7 @@ namespace S10259842_PRG2Assignment
                 {
                     if (iceCreamListCount < 1)
                     {
-                        Console.WriteLine("Option is unavailable since there is no current order. Please try again and input option 2");
+                        Console.WriteLine("Option is unavailable since there is no ice cream in current order. Please try again and input option 2");
                         return;
                     }
                     Console.Write("Enter Ice Cream no. to modify (must be int): ");
@@ -872,7 +964,7 @@ namespace S10259842_PRG2Assignment
                 {
                     if (iceCreamListCount < 1)
                     {
-                        Console.WriteLine("Option is unavailable since there is no current order. Please try again and input option 2");
+                        Console.WriteLine("Option is unavailable since there is no ice cream in current order. Please try again and input option 2");
                         return;
                     }
                     else if (iceCreamListCount < 2)
@@ -886,7 +978,7 @@ namespace S10259842_PRG2Assignment
                         currentOrder.DeleteIceCream(index-1);
                     }
                 }
-                Console.WriteLine(currentOrder); //List all the ice cream information in the order
+                DisplayOrder(currentOrder); //List all the ice cream information in the order
 
 
                 /*
@@ -1036,7 +1128,7 @@ namespace S10259842_PRG2Assignment
                         List<Topping> toppings = new List<Topping>();
                         string? Flavour1 = orderInfo[8];
                           
-                        for (int i = 8; i < 11; i++)
+                        for (int i = 8; i < 11; i++) //Reads fields Flavour1-Flavour4
                         {
                             if (orderInfo[i] != "")
                             {
@@ -1044,7 +1136,7 @@ namespace S10259842_PRG2Assignment
                             }
 
                         }
-                        for (int i = 11; i < 15; i++)
+                        for (int i = 11; i < 15; i++) //Reads fields Topping1-Topping4
                         {
                             if (orderInfo[i] != "")
                             {
@@ -1053,7 +1145,7 @@ namespace S10259842_PRG2Assignment
 
                         }
 
-                        
+                        // If blocks to create new IceCream object based on the option field
                         if (orderInfo[4] == "Cup")
                         {
                             
@@ -1077,11 +1169,14 @@ namespace S10259842_PRG2Assignment
 
 
                         int orderID = Convert.ToInt32(orderInfo[0]);
+                        // Doesn't use MakeOrder as its supposed to be in OrderHistory
+                        //
                         if (orderDict.ContainsKey(orderID) == false)
                         {
                             orderDict[orderID] = new Order(Convert.ToInt16(orderInfo[0]), Convert.ToDateTime(orderInfo[2]));
                             orderDict[orderID].TimeFulfilled = Convert.ToDateTime(orderInfo[3]);
-                            Customer customer = SearchCustomer(orderInfo[1]);
+                            Customer customer = SearchCustomer(orderInfo[1]); //Prevents SearchCustomer from having Console.WriteLine("Customer found ...")
+                            
                             customer.OrderHistory.Add(orderDict[orderID]);
                         }
                         orderDict[orderID].IceCreamList.Add(iceCream);

@@ -20,6 +20,7 @@ namespace S10259842_PRG2Assignment
         private DateTime timeReceived;
         private DateTime? timeFulfilled = null;
         private List<IceCream> iceCreamList = new List<IceCream>();
+        
 
 
         public int Id
@@ -120,7 +121,7 @@ namespace S10259842_PRG2Assignment
           selected: option, scoops, flavours, toppings, dipped cone(if applicable), waffle flavour
              (if applicable) and update the ice cream object’s info accordingl */
         {
-
+            
             int input = 0;
             string option = "";
             bool dipped = false;
@@ -376,7 +377,7 @@ namespace S10259842_PRG2Assignment
                 total += iceCream.CalculatePrice();
                
             }
-            Console.WriteLine($"Total for {Id} = {total}" );
+            //Console.WriteLine($"Total for {Id} = {total}" );
             return total;
         }
 
