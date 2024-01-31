@@ -7,6 +7,7 @@
 using Microsoft.VisualBasic;
 using System;
 using System.Diagnostics.Metrics;
+using System.Drawing;
 using System.Security;
 using System.Text.RegularExpressions;
 
@@ -25,6 +26,7 @@ namespace S10259842_PRG2Assignment
 
             Customer currentCustomer = null; //will be set to the current customer making the order; will be used to process advanced feature (a) 
 
+            List<double> orderPrices = new List<double>(); //to store the prices of each ice cream in the order, to make calculations for total bill subtraction due to PunchCard or Birthday discount easier to process
 
             Dictionary<int, Customer> customerDict = new Dictionary<int, Customer>();
 
@@ -158,6 +160,7 @@ namespace S10259842_PRG2Assignment
                         if (intInput < minInt || intInput > maxInt)
                         {
                             Console.WriteLine($"Error: Input must be between {minInt}-{maxInt}. ");
+                            Console.WriteLine();
 
                             throw new Exception();
                         }
@@ -169,11 +172,13 @@ namespace S10259842_PRG2Assignment
 
                         Console.Write("Please re-enter your option: ");
                         input = Console.ReadLine();
+                        Console.WriteLine();
                     }
                     catch (Exception ex) //Acts like a finally block but doesn't execute 100% of the time.
                     {
                         Console.Write("Please re-enter your option: ");
                         input = Console.ReadLine();
+                        Console.WriteLine();
                     }
                 }
                 return intInput;
@@ -402,7 +407,7 @@ namespace S10259842_PRG2Assignment
                         try
                         {
                             Console.Write($"Enter flavour {i + 1}: ");
-                            int flavourOption = Convert.ToInt32(Console.ReadLine()) - 1;
+                            int flavourOption = CheckIntInput(Console.ReadLine(), 1, 6) - 1;
 
                             Flavour selectedFlavour = new Flavour();
                             bool found = false;
@@ -533,7 +538,9 @@ namespace S10259842_PRG2Assignment
                                 break;
                         }
 
-                        if (count < 3) //count = 3 is the 4th and final allowed iteration
+                        count++;
+
+                        if (count < 4) //4 = final allowed iteration
                         {
                             Console.WriteLine("Would you like to add more toppings: "); //prompt user if they would like to add more toppings; loop will continue if yes, and break if no
                             int addMoreToppings = ProcessYesNo();
@@ -551,6 +558,7 @@ namespace S10259842_PRG2Assignment
                         {
                             Console.WriteLine("You have reached the maximum amount of toppings allowed (4). ");
                             Console.WriteLine();
+                            break;
                         }
                     }
                 }
@@ -923,10 +931,10 @@ namespace S10259842_PRG2Assignment
                 */
 
                 Order newOrder = selectedCustomer.MakeOrder(GiveOrderID());
-                
+
+                Console.WriteLine($"Hello, {selectedCustomer.Name}! What would you like today? ");
                 while (true)
                 {
-                    Console.WriteLine($"Hello, {selectedCustomer.Name}! What would you like today? ");
                     IceCream newIceCream = OrderIceCream();
                     newOrder.AddIceCream(newIceCream);
 
@@ -955,10 +963,10 @@ namespace S10259842_PRG2Assignment
                     regularQueue.Enqueue(newOrder);
                 }
 
-                currentCustomer = selectedCustomer; //used to define the current customer making the current order so that checkout processing (advanced feature a) will be made easier
-                                                    //since we will be able to define which customer's order to process
-
+                newOrder.CustomerID = selectedCustomer.MemberId; //assigns the current customer's ID to the order
+                
                 Console.WriteLine("Order made successfully. Please proceed to checkout. ");
+                Console.WriteLine();
             }
 
            
@@ -1127,16 +1135,14 @@ namespace S10259842_PRG2Assignment
             }
 
 
-            void ProcessOrderAndCheckout(Customer customer) //advanced feature a (Keagan)
+            void ProcessOrderAndCheckout() //advanced feature a (Keagan)
             {
-                if (customer != null)
+                Console.WriteLine();
+
+                Order currentOrder = new Order(); //sets current order to a new Order instance until it is set again to an actual Customer's order in the code below
+
+                if (regularQueue.Count != 0) //checks if regular queue has orders in it; if there are, then orders can be processed. 
                 {
-                    string customerTier = customer.Rewards.Tier;
-                    int customerPoints = customer.Rewards.Points;
-
-
-                    Order currentOrder = new Order(); //sets current order to a new Order instance until it is set again to an actual Customer's order in the code below
-
                     if (goldenQueue.Count != 0) //if there are any orders in the gold members' queue, then its first order will be processed
                     {
                         currentOrder = goldenQueue.Dequeue();
@@ -1146,14 +1152,25 @@ namespace S10259842_PRG2Assignment
                         currentOrder = regularQueue.Dequeue();
                     }
 
+                    Customer customer = SearchCustomer(currentOrder.CustomerID.ToString()); //returns the customer whose order is to be processed 
+                    string customerTier = customer.Rewards.Tier;
+                    int customerPoints = customer.Rewards.Points;
+
+                    Console.WriteLine($"{customer.Name}'s order (Member ID: {customer.MemberId}): ");
+                    Console.WriteLine();
+
                     int count = 1;
                     foreach (IceCream i in currentOrder.IceCreamList) //display all orders in the current order being processed
                     {
                         Console.WriteLine($"---------------Item {count}---------------");
                         Console.WriteLine(i);
                         Console.WriteLine();
+                        Console.WriteLine();
+                        count++;
                     }
 
+                    Console.WriteLine("------------------------------------");
+                    Console.WriteLine();
 
                     double totalBill = 0;
                     List<double> orderPrices = new List<double>(); //to store the prices of each ice cream in the order, to make calculations for total bill subtraction due to PunchCard or Birthday discount easier to process
@@ -1168,7 +1185,7 @@ namespace S10259842_PRG2Assignment
 
                     Console.WriteLine($"Your membership status: {customerTier}"); //displaying customer's membership status
                     Console.WriteLine($"Your membership points: {customerPoints}"); //displaying customer's membership points
-
+                    Console.WriteLine();
 
                     if (customer.IsBirthday())
                     {
@@ -1183,12 +1200,17 @@ namespace S10259842_PRG2Assignment
 
                         totalBill -= highestPrice;
                         Console.WriteLine("Happy Birthday! Your most expensive order today is free of charge!");
+                        Console.WriteLine($"Total birthday discount: {highestPrice:C}");
+                        Console.WriteLine();
                     }
 
 
                     if (customer.Rewards.PunchCard == 10)
                     {
                         Console.WriteLine("You have completed your Punch Card! Your first ice cream in your order is now free of charge. ");
+                        Console.WriteLine($"Total PunchCard discount: {orderPrices[0]:C}");
+                        Console.WriteLine();
+
                         totalBill -= orderPrices[0];
                         customer.Rewards.PunchCard = 0;
                     }
@@ -1204,16 +1226,23 @@ namespace S10259842_PRG2Assignment
 
                         if (option == 1)
                         {
-                            Console.WriteLine("Enter points to use: ");
+                            Console.Write("Enter points to use: ");
                             string? points = Console.ReadLine();
 
                             double pointsToUse = CheckIntInput(points, 1, customerPoints);
 
-
-
                             double pointDiscount = pointsToUse * 0.02;
+
+                            Console.WriteLine();
+                            Console.WriteLine($"Total discount: {pointDiscount:C}");
+
                             totalBill -= pointDiscount;
                         }
+                    }
+
+                    if (totalBill < 0) //if discount makes total bill < 0, set total bill to 0
+                    {
+                        totalBill = 0;
                     }
 
                     Console.WriteLine($"Final Bill: {totalBill:C}");
@@ -1221,8 +1250,8 @@ namespace S10259842_PRG2Assignment
                     Console.ReadLine();
                     customer.CurrentOrder.TimeFulfilled = DateTime.Now;
                     customer.OrderHistory.Add(currentOrder);
-                    customer.CurrentOrder = null; 
-                    
+                    customer.CurrentOrder = null;
+
 
                     foreach (IceCream i in currentOrder.IceCreamList)
                     {
@@ -1239,16 +1268,19 @@ namespace S10259842_PRG2Assignment
                     //customerTier is compared to the currentTier which is the tier before AddPoints() is called.
                     //if customerTier is different from currentTier, the tier will be updated. 
 
-                    if (customerTier != currentTier) 
+                    if (customerTier != currentTier)
                     {
                         Console.WriteLine($"Your PointCard status has been upgraded! You are now a {customerTier} member. ");
                     }
 
                     currentOrder.TimeFulfilled = DateTime.Now; //marking order as fulfilled
                     customer.OrderHistory.Add(currentOrder);
-                                           
-                    currentOrder.AmountCharged = totalBill;
 
+                    currentOrder.AmountCharged = totalBill;
+                }
+                else
+                {
+                    Console.WriteLine("Order queue empty. Please make an order first. ");
                 }
             }
 
@@ -1388,15 +1420,7 @@ namespace S10259842_PRG2Assignment
                         ModifyOrderDetails();
                         break;
                     case 7:
-                        if (currentCustomer != null)
-                        {
-                            ProcessOrderAndCheckout(currentCustomer);
-                        }
-                        else
-                        {
-                            Console.WriteLine("You have not made an order. Please make an order before making payment. ");
-                            Console.WriteLine();
-                        }
+                        ProcessOrderAndCheckout();
                         break;
                     case 8:
                         DisplayChargedAmts();
