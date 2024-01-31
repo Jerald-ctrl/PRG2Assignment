@@ -59,7 +59,7 @@ namespace S10259842_PRG2Assignment
             List<string> coneList = new List<string>();
             List<string> waffleList = new List<string>();
 
-            void InitialiseItems()
+            void InitialiseItems() //Keagan
             {
                 using (StreamReader iReader = new StreamReader("options.csv"))
                 {
@@ -87,7 +87,7 @@ namespace S10259842_PRG2Assignment
                 }
             }
 
-            InitialiseItems(); //initialise options in options.csv
+            InitialiseItems(); //initialise options in options.csv, Keagan
 
 
             List<string> flavourList = new List<string>();
@@ -109,26 +109,9 @@ namespace S10259842_PRG2Assignment
                 }
             }
 
-            InitialiseFlavours(); //initialise flavours in flavours.csv
+            InitialiseFlavours(); //initialise flavours in flavours.csv, Keagan
 
-            /*
-            //Code to Test order functions
-            Order order1 = new Order(1,DateTime.Now);
-            List<Flavour> flavours = new List<Flavour>();
-            flavours.Add(new Flavour("Strawberry",false));
-
-            List<Topping> toppings = new List<Topping>();
-            toppings.Add(new Topping("Oreos")); 
-            order1.AddIceCream(new Cup("Cup", 1,flavours,toppings));
-            regularQueue.Enqueue(order1);
-            Console.WriteLine("hi" + order1.CalculateTotal());
-
-            order1.AddIceCream(new Cup("Cup", 1, flavours, toppings));
-            //order1.ModifyIceCream(1);
-            DateTime DoB = new DateTime(12 / 23 / 1232);
-            Customer customer = new Customer("John", 103021, DoB);
-            Console.WriteLine(customer.OrderHistory);
-            */
+           
 
 
             void DisplayMenu() //Displays the menu every iteration, written by Jerald
@@ -185,7 +168,7 @@ namespace S10259842_PRG2Assignment
             }
 
             
-
+            // Keagan
             int ProcessYesNo() //method to process all yes/no choices, Written by Keagan
             {
                 Console.WriteLine("[1] Yes");
@@ -202,41 +185,7 @@ namespace S10259842_PRG2Assignment
             }
 
 
-            //method to search for customer and return Customer object (used in features 4, 5 and 6)
-            /*
-            Customer SearchCustomer(string id) 
-            {
-                int idToSearch = 0;
-
-                try
-                {
-                    if (id.Length == 6 && id.All(char.IsDigit) && id[0] != '0')
-                    {
-                        idToSearch = Convert.ToInt32(id);
-                    }
-                    else
-                    {
-                        throw new FormatException();
-                    }
-                }
-                catch (FormatException f)
-                {
-                    Console.WriteLine("ID has to be a 6-digit number, and cannot begin with 0. Please try again. ");
-                }
-
-                Customer customer = null;
-                foreach (KeyValuePair<int, Customer> c in customerDict)
-                {
-                    if (idToSearch == c.Value.MemberId)
-                    {
-                        customer = c.Value;
-                        break;
-                    }
-                }
-
-                return customer;
-            }
-            */
+           // Keagan
             Customer SearchCustomer(string id) //Written by Keagan
             {
                 int idToSearch = 0;
@@ -565,31 +514,18 @@ namespace S10259842_PRG2Assignment
                 return iceCream;
             }
 
-            void DisplayOrder(Order order) // Function to display all information about an order, used for Q2, Q5
+            void DisplayOrder(Order order) // Function to display all information about an order, used for Q2, Q5, Jerald
             {
 
-                //$"{Id,-12} {TimeReceived,-12} {TimeFulfilled,-12} {orders}";
+               
                 Console.WriteLine($"{"Order Id",-12} {"TimeReceived",-35} {"TimeFulfilled",-35}");
 
                 Console.WriteLine(order);
 
-                /*
-                Console.WriteLine("Order Id:" + order.Id);
-                Console.WriteLine($"Time Received: {order.TimeReceived}");
-                Console.WriteLine($"Cost: {order.CalculateTotal()}");
-
-                if (order.TimeFulfilled == null)
-                {
-                    Console.WriteLine("Order is currently not fulfilled.");
-                }
-                else
-                {
-                    Console.WriteLine($"Time fulfilled: {order.TimeFulfilled}");
-                }
-                */
+               
             }
 
-
+            // Keagan
             Customer SelectCustomer(string customerID)
             {
                 Customer selectedCustomer = SearchCustomer(customerID);

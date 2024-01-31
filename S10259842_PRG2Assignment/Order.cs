@@ -124,11 +124,8 @@ namespace S10259842_PRG2Assignment
 
 
         
-        public void ModifyIceCream(int index) //Modify a singular ice cream.
-        /* if [1] is selected, have the user select which ice cream to modify then prompt the user 
-         for the new information for the modifications they wish to make to the ice cream
-          selected: option, scoops, flavours, toppings, dipped cone(if applicable), waffle flavour
-             (if applicable) and update the ice cream object’s info accordingl */
+        public void ModifyIceCream(int index) //Modify a singular ice cream. 
+      
         {
             
             int input = 0;
@@ -244,30 +241,7 @@ namespace S10259842_PRG2Assignment
                 }
 
                 iceCream1 = new Cone(option,scoops,FlavourList,toppingList,dipped); 
-                /*
-                while (true) //Check for YN
-                {
-                    Console.WriteLine(
-                        "Do you wish to order a Chocolate-dipped cone? \r\n" +
-                        "[1] Yes \r\n" +
-                        "[2] No, I'd like a regular. \r\n" +
-                        "Enter your option: ");
-                    string dippedChoice = Console.ReadLine();
-
-                    dippedCCheckIntInput()
-                    if (dippedChoice == "Y")
-                    {
-                        dipped = true;
-                        break;
-                    }
-                    if (dippedChoice == "N")
-                    {
-                        break;
-                    }
-                    
-                    Console.WriteLine("Error: Invalid input. ");
-                    
-                } */
+               
 
             }
 
@@ -288,29 +262,7 @@ namespace S10259842_PRG2Assignment
                 waffleOption = CheckIntInput(Console.ReadLine(), 3);
                 iceCream1 = new Waffle(option, scoops, FlavourList, toppingList, waffleFlavours[waffleOption]);
 
-                /*
-                while (true)
-                {
-                    try
-                    {
-                        waffleOption = Convert.ToInt16(Console.ReadLine());
-                        if (option < 1 || option > 4)
-                        {
-                            Console.WriteLine("Error: Input must be between 1-4. ");
-                        }
-                        else
-                        {
-                            break;
-                        }
-
-                    }
-                    catch (FormatException ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-
-                }
-                */
+               
 
             }
             else
@@ -321,35 +273,6 @@ namespace S10259842_PRG2Assignment
 
             IceCreamList[index] = iceCream1;
 
-            /*
-            int scoops = Convert.ToInt16(Console.ReadLine());
-            for (int i = 0; i < scoops; i++)
-            {
-
-                Console.WriteLine(
-                    "Flavours: \r\n" +
-                    "[1] Vanilla \r\n" +
-                    "[2] Chocolate \r\n" +
-                    "[3] Strawberry \r\n \r\n" +
-                    "Premium Flavours (+$2): \r\n" +
-                    "[4] Durian \r\n" +
-                    "[5] Ube \r\n" +
-                    "[6] Sea Salt \r\n" +
-                    "[0] None \r\n" +
-                    $"Please enter number of all wanted flavours ({scoops} scoops):  "); //Check for "Vanilla, Chocolate, Strawberry, Durian, Ube, Sea Salt" and no. of ints
-            }
-
-            Console.WriteLine(
-                "Toppings:  \r\n" +
-                "[1] Sprinkles \r\n" +
-                "[2] Mochi \r\n " +
-                "[3] Sago \r\n " +
-                "[4] Oreos \r\n " +
-                "[0] None \r\n" +
-                "Please enter number of all wanted ice cream toppings: "); 
-
-            Console.WriteLine("[1] for Cup, [2] for Cone, [3] for Waffle. Please enter ice cream option. ");
-            */
         }
 
         public void AddIceCream(IceCream iceCream)
@@ -367,26 +290,11 @@ namespace S10259842_PRG2Assignment
             double total = 0;
             foreach (IceCream iceCream in iceCreamList)
             {
-                /*if (iceCream.Option == "Cup") 
-                {
-                    Cup cup = (Cup)iceCream;
-                    total += cup.CalculatePrice();
-                }
-                if (iceCream.Option == "Cone")
-                {
-                    Cone cone = (Cone)iceCream;
-                    total += cone.CalculatePrice();
-                }
-                if (iceCream.Option == "Waffle")
-                {
-                    Waffle waffle = (Waffle)iceCream;
-                    total += waffle.CalculatePrice();
-                }
-                */
+                
                 total += iceCream.CalculatePrice();
                
             }
-            //Console.WriteLine($"Total for {Id} = {total}" );
+         
             return total;
         }
 
