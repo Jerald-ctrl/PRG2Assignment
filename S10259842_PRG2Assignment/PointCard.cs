@@ -63,7 +63,6 @@ namespace S10259842_PRG2Assignment
             {
                 Tier = "Silver";
             }
-
         }
 
         public void RedeemPoints(int pointDed)
