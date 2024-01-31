@@ -21,8 +21,10 @@ namespace S10259842_PRG2Assignment
         private DateTime? timeFulfilled = null;
         private List<IceCream> iceCreamList = new List<IceCream>();
         
+        private int amountCharged;
 
-
+        public int AmountCharged
+        { get { return amountCharged; } set { amountCharged = value; } }
         public int Id
         {
             get { return id; }
@@ -43,6 +45,8 @@ namespace S10259842_PRG2Assignment
 
         public List<IceCream> IceCreamList
         { get { return iceCreamList; } set { iceCreamList = value; } }
+
+        
 
         public Order()
         {
