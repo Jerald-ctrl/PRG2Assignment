@@ -1178,7 +1178,7 @@ namespace S10259842_PRG2Assignment
                     }
 
 
-                    if ((customer.Rewards.Tier == "Silver" || customer.Rewards.Tier == "Gold") && customer.Rewards.Points > 0)
+                    if ((customer.Rewards.Tier == "Silver" || customer.Rewards.Tier == "Gold") && customer.Rewards.Points > 0 && totalBill != 0)
                     {
                         Console.Write("Redeem PointCard points? ");
 
@@ -1294,7 +1294,15 @@ namespace S10259842_PRG2Assignment
                             {
                                 //Console.WriteLine(key+ order.CalculateTotal+"hi");
                                 //Console.WriteLine("Matched Total", key);
-                                MonthCharged[key] += order.CalculateTotal();
+                                if (order.AmountCharged == 0)
+                                {
+                                    MonthCharged[key] += order.CalculateTotal();
+                                }
+                                else
+                                {
+                                    MonthCharged[key] += order.AmountCharged;
+                                }
+                                
                             }
                             
                         }
@@ -1307,10 +1315,10 @@ namespace S10259842_PRG2Assignment
                 double annualTotal = 0;
                 foreach (KeyValuePair<string, double> MonthTotalPair in MonthCharged)
                 {
-                    Console.WriteLine($"{MonthTotalPair.Key}: {MonthTotalPair.Value}");
+                    Console.WriteLine($"{MonthTotalPair.Key+":",-20} ${MonthTotalPair.Value:N2}");
                     annualTotal += MonthTotalPair.Value;
                 }
-                Console.WriteLine($"Total: {annualTotal}");
+                Console.WriteLine($"Total: ${annualTotal:N2}");
 
 
             }
