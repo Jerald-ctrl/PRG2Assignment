@@ -1022,6 +1022,7 @@ namespace S10259842_PRG2Assignment
                     foreach (IceCream i in currentOrder.IceCreamList) //display all orders in the current order being processed
                     {
                         Console.WriteLine(i);
+                        Console.WriteLine();
                     }
 
 
