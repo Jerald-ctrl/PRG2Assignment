@@ -7,6 +7,7 @@
 using Microsoft.VisualBasic;
 using System;
 using System.Diagnostics.Metrics;
+using System.Security;
 using System.Text.RegularExpressions;
 
 namespace S10259842_PRG2Assignment
@@ -180,14 +181,18 @@ namespace S10259842_PRG2Assignment
 
             
 
-            int ProcessYesNo(string choice) //method to process all yes/no choices, Written by Keagan
+            int ProcessYesNo() //method to process all yes/no choices, Written by Keagan
             {
                 Console.WriteLine("[1] Yes");
                 Console.WriteLine("[2] No");
                 Console.WriteLine();
                 Console.Write("Enter option: ");
 
+                string? choice = Console.ReadLine();
                 int option = CheckIntInput(choice, 1, 2);
+
+                Console.WriteLine();
+
                 return option;
             }
 
@@ -235,7 +240,7 @@ namespace S10259842_PRG2Assignment
                     try
                     {
                         
-                        if (id.Length == 6 && id.All(char.IsDigit) && id[0] != '0' && id[0] != '-')
+                        if (id.Length == 6 && id.All(char.IsDigit) && id[0] != '0') 
                         {
                             idToSearch = Convert.ToInt32(id);
                         }
@@ -254,21 +259,19 @@ namespace S10259842_PRG2Assignment
 
                             }
                         }
+
                         Console.WriteLine("Customer ID not found. Please reinput.");
+                        Console.WriteLine();
                     }
                     catch (FormatException f)
                     {
                         Console.WriteLine("ID has to be a positive 6-digit number, and cannot begin with 0. Please try again. ");
+                        Console.WriteLine();
                     }
                     
                     Console.Write("Select customer (enter ID to select): ");
                     id = Console.ReadLine();
                 }
-
-
-
-
-                
             }
                 
 
@@ -279,7 +282,6 @@ namespace S10259842_PRG2Assignment
             {
                 IceCream iceCream = null;
 
-                Console.WriteLine("What would you like today? ");
                 Console.WriteLine("[1] Cup");
                 Console.WriteLine("[2] Cone");
                 Console.WriteLine("[3] Waffle");
@@ -350,11 +352,13 @@ namespace S10259842_PRG2Assignment
                         if (selectedScoops > 3) //using if-else statements to check for ArgumentOutOfRange exception, because different error messages are required
                         {
                             Console.WriteLine("Items can have a maximum of 3 scoops. Please try again. ");
+                            Console.WriteLine();
                             continue;
                         }
                         else if (selectedScoops < 1)
                         {
                             Console.WriteLine("Items must have a minimum of 1 scoop. Please try again. ");
+                            Console.WriteLine();
                             continue;
                         }
                         break;
@@ -495,8 +499,8 @@ namespace S10259842_PRG2Assignment
                 }
 
 
-                Console.Write("Would you like toppings? ");
-                int option = ProcessYesNo(Console.ReadLine());
+                Console.WriteLine("Would you like toppings? ");
+                int option = ProcessYesNo();
 
                 if (option == 1)
                 {
@@ -531,8 +535,8 @@ namespace S10259842_PRG2Assignment
 
                         if (count < 3) //count = 3 is the 4th and final allowed iteration
                         {
-                            Console.Write("Would you like to add more toppings: "); //prompt user if they would like to add more toppings; loop will continue if yes, and break if no
-                            int addMoreToppings = ProcessYesNo(Console.ReadLine());
+                            Console.WriteLine("Would you like to add more toppings: "); //prompt user if they would like to add more toppings; loop will continue if yes, and break if no
+                            int addMoreToppings = ProcessYesNo();
 
                             if (addMoreToppings == 1)
                             {
@@ -576,12 +580,17 @@ namespace S10259842_PRG2Assignment
                 }
                 */
             }
+
+
             Customer SelectCustomer(string customerID)
             {
                 Customer selectedCustomer = SearchCustomer(customerID);
                 Console.WriteLine($"Selected customer: {selectedCustomer.Name} (ID: {selectedCustomer.MemberId})");
+                Console.WriteLine();
                 return selectedCustomer;
             }
+
+
             Dictionary<int, Order> orderDict = new Dictionary<int, Order>();
             //Read customers.csv and create corresponding IceCream objects and append to Order to customer
             void ProcessOrdersCSV()
@@ -912,18 +921,20 @@ namespace S10259842_PRG2Assignment
                     }
                 }
                 */
+
                 Order newOrder = selectedCustomer.MakeOrder(GiveOrderID());
                 
                 while (true)
                 {
+                    Console.WriteLine($"Hello, {selectedCustomer.Name}! What would you like today? ");
                     IceCream newIceCream = OrderIceCream();
                     newOrder.AddIceCream(newIceCream);
 
                     int continueOption = 0;
 
-                    Console.Write("Would you like to add another ice cream to the order: "); //prompt user if they would like to continue
+                    Console.WriteLine("Would you like to add another ice cream to the order? "); //prompt user if they would like to continue
 
-                    continueOption = ProcessYesNo(Console.ReadLine());
+                    continueOption = ProcessYesNo();
 
                     if (continueOption == 1)
                     {
@@ -1120,6 +1131,10 @@ namespace S10259842_PRG2Assignment
             {
                 if (customer != null)
                 {
+                    string customerTier = customer.Rewards.Tier;
+                    int customerPoints = customer.Rewards.Points;
+
+
                     Order currentOrder = new Order(); //sets current order to a new Order instance until it is set again to an actual Customer's order in the code below
 
                     if (goldenQueue.Count != 0) //if there are any orders in the gold members' queue, then its first order will be processed
@@ -1131,9 +1146,10 @@ namespace S10259842_PRG2Assignment
                         currentOrder = regularQueue.Dequeue();
                     }
 
-
+                    int count = 1;
                     foreach (IceCream i in currentOrder.IceCreamList) //display all orders in the current order being processed
                     {
+                        Console.WriteLine($"---------------Item {count}---------------");
                         Console.WriteLine(i);
                         Console.WriteLine();
                     }
@@ -1150,8 +1166,8 @@ namespace S10259842_PRG2Assignment
                     }
 
 
-                    Console.WriteLine($"Your membership status: {customer.Rewards.Tier}"); //displaying customer's membership status
-                    Console.WriteLine($"Your membership points: {customer.Rewards.Points}"); //displaying customer's membership points
+                    Console.WriteLine($"Your membership status: {customerTier}"); //displaying customer's membership status
+                    Console.WriteLine($"Your membership points: {customerPoints}"); //displaying customer's membership points
 
 
                     if (customer.IsBirthday())
@@ -1178,19 +1194,20 @@ namespace S10259842_PRG2Assignment
                     }
 
 
-                    if ((customer.Rewards.Tier == "Silver" || customer.Rewards.Tier == "Gold") && customer.Rewards.Points > 0)
+                    if ((customerTier == "Silver" || customerTier == "Gold") && customerPoints > 0 && totalBill != 0) //totalBill != 0 is to check if the punchCard was used to get a single ice cream free of charge, or
+                                                                                                                      //an ice cream was free of charge due to the birthday discount, or both,
+                                                                                                                      //which would mean that points would not have to be redeemed. 
                     {
-                        Console.Write("Redeem PointCard points? ");
+                        Console.WriteLine("Redeem PointCard points? ");
 
-                        string? choice = Console.ReadLine();
-                        int option = ProcessYesNo(Console.ReadLine());
+                        int option = ProcessYesNo();
 
                         if (option == 1)
                         {
                             Console.WriteLine("Enter points to use: ");
                             string? points = Console.ReadLine();
 
-                            double pointsToUse = CheckIntInput(points, 1, customer.Rewards.Points);
+                            double pointsToUse = CheckIntInput(points, 1, customerPoints);
 
 
 
@@ -1211,6 +1228,26 @@ namespace S10259842_PRG2Assignment
                     {
                         customer.Rewards.Punch();
                     }
+
+                    string currentTier = customerTier;
+
+                    double pointsEarned = Math.Floor(totalBill * 0.72);
+                    customer.Rewards.AddPoints(Convert.ToInt32(pointsEarned));
+
+
+                    //customerTier may have updated after AddPoints() is called. 
+                    //customerTier is compared to the currentTier which is the tier before AddPoints() is called.
+                    //if customerTier is different from currentTier, the tier will be updated. 
+
+                    if (customerTier != currentTier) 
+                    {
+                        Console.WriteLine($"Your PointCard status has been upgraded! You are now a {customerTier} member. ");
+                    }
+
+                    currentOrder.TimeFulfilled = DateTime.Now; //marking order as fulfilled
+                    customer.OrderHistory.Add(currentOrder);
+                                           
+                    currentOrder.AmountCharged = totalBill;
 
                 }
             }
@@ -1319,7 +1356,7 @@ namespace S10259842_PRG2Assignment
             while (true) 
             {
                 DisplayMenu();
-                int choice = CheckIntInput(Console.ReadLine(), 0, 8); //change max input to 9 when including advanced features!!!
+                int choice = CheckIntInput(Console.ReadLine(), 0, 8);
 
                 switch (choice) //switch is used because it is a more efficient option when dealing with multiple possible integer inputs
                                 //especially in cases of selecting from a list of options, as compared to if-else

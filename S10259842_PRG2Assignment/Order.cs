@@ -21,9 +21,9 @@ namespace S10259842_PRG2Assignment
         private DateTime? timeFulfilled = null;
         private List<IceCream> iceCreamList = new List<IceCream>();
         
-        private int amountCharged;
+        private double amountCharged;
 
-        public int AmountCharged
+        public double AmountCharged
         { get { return amountCharged; } set { amountCharged = value; } }
         public int Id
         {

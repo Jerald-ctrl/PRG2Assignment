@@ -55,11 +55,11 @@ namespace S10259842_PRG2Assignment
         {
             Points += pointAdd;
 
-            if (Points > 100)
+            if (Points >= 100)
             {
                 Tier = "Gold";
             }
-            else if (Points > 50 && Tier != "Gold") 
+            else if (Points >= 50 && Tier != "Gold") 
             {
                 Tier = "Silver";
             }
