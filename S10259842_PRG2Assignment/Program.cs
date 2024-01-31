@@ -178,6 +178,7 @@ namespace S10259842_PRG2Assignment
                 return intInput;
             }
 
+            
 
             int ProcessYesNo(string choice) //method to process all yes/no choices, Written by Keagan
             {
@@ -274,7 +275,7 @@ namespace S10259842_PRG2Assignment
                
             
 
-            IceCream OrderIceCream() //ice cream order process
+            IceCream OrderIceCream() //ice cream order process, written by Keagan
             {
                 IceCream iceCream = null;
 
@@ -581,11 +582,123 @@ namespace S10259842_PRG2Assignment
                 Console.WriteLine($"Selected customer: {selectedCustomer.Name} (ID: {selectedCustomer.MemberId})");
                 return selectedCustomer;
             }
+            Dictionary<int, Order> orderDict = new Dictionary<int, Order>();
+            //Read customers.csv and create corresponding IceCream objects and append to Order to customer
+            void ProcessOrdersCSV()
+            {
+                Order newOrder = null;
+                using (StreamReader sR = new StreamReader("orders.csv"))  //Id,MemberId,TimeReceived,TimeFulfilled,Option,Scoops,Dipped,WaffleFlavour,Flavour1,Flavour2,Flavour3,Topping1,Topping2,Topping3,Topping4
+                {
+                    sR.ReadLine();
+                    string? line;
+                    IceCream iceCream = null;
+                    while ((line = sR.ReadLine()) != null)
+                    {
+                        string[] orderInfo = line.Split(",");
+                        double cost = 4;
+
+                        List<Flavour> flavours = new List<Flavour>();
+                        List<Topping> toppings = new List<Topping>();
+                        string? Flavour1 = orderInfo[8];
+
+                        for (int i = 8; i < 11; i++) //Reads fields Flavour1-Flavour4
+                        {
+                            if (orderInfo[i] != "")
+                            {
+                                flavours.Add(CreateFlavour(orderInfo[i]));
+                            }
+
+                        }
+                        for (int i = 11; i < 15; i++) //Reads fields Topping1-Topping4
+                        {
+                            if (orderInfo[i] != "")
+                            {
+                                toppings.Add(new Topping(orderInfo[i]));
+                            }
+
+                        }
+
+                        // If blocks to create new IceCream object based on the option field
+                        if (orderInfo[4] == "Cup")
+                        {
+
+                            iceCream = new Cup(orderInfo[4], Convert.ToInt16(orderInfo[5]), flavours, toppings);
+                            //Console.WriteLine($"Cup is {iceCream.CalculatePrice()}");
+                        }
+                        else if (orderInfo[4] == "Cone")
+                        {
+                            bool dipped = Convert.ToBoolean(orderInfo[6]);
+                            iceCream = new Cone(orderInfo[4], Convert.ToInt16(orderInfo[5]), flavours, toppings, dipped);
+                            //Console.WriteLine($"Cone is {iceCream.CalculatePrice()}");
+                        }
+                        else
+                        {
+                            string waffleFlavour = orderInfo[7];
+                            iceCream = new Waffle(orderInfo[4], Convert.ToInt16(orderInfo[5]), flavours, toppings, waffleFlavour);
+                            //Console.WriteLine($"Waffle is {iceCream.CalculatePrice()}");
+
+                        }
+                        
 
 
+                        int orderID = Convert.ToInt32(orderInfo[0]);
+                        // Doesn't use MakeOrder as its supposed to be in OrderHistory
+                        //
+                        if (orderDict.ContainsKey(orderID) == false)
+                        {
+                            orderDict[orderID] = new Order(Convert.ToInt32(orderInfo[0]), Convert.ToDateTime(orderInfo[2]));
+                            orderDict[orderID].TimeFulfilled = Convert.ToDateTime(orderInfo[3]);
+                            Customer customer = SearchCustomer(orderInfo[1]); //Prevents SearchCustomer from having Console.WriteLine("Customer found ...")
+
+                            customer.OrderHistory.Add(orderDict[orderID]);
+                        }
+                        orderDict[orderID].IceCreamList.Add(iceCream);
+
+
+
+                        /*
+                        newOrder = new Order(Convert.ToInt16(orderInfo[0]), Convert.ToDateTime(orderInfo[2]));
+                        newOrder.IceCreamList.Add( iceCream );
+                        newOrder.TimeFulfilled = Convert.ToDateTime(orderInfo[3]); */
+
+
+                    }
+
+                }
+
+
+            }
+            
+            
+            ProcessOrdersCSV();
+            int GiveOrderID() //Function to generate a unique order id
+            {
+                while (true)
+                {
+                    
+                    Random newRandom = new Random();
+                    int orderID = newRandom.Next(1, 1000);
+                    if (orderDict.ContainsKey(orderID) != true)
+                    {
+                        return orderID;
+                    }
+                    Console.WriteLine("Sus");
+                }
+                
+
+                
+                   
+            }
             /*--------------------------------------------------------FEATURES----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-
+            /*--------------------------------------------------------FEATURES----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+            /*--------------------------------------------------------FEATURES----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+            /*--------------------------------------------------------FEATURES----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+            /*--------------------------------------------------------FEATURES----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+            /*--------------------------------------------------------FEATURES----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+            /*--------------------------------------------------------FEATURES----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+            /*--------------------------------------------------------FEATURES----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+            
+            
             void ListAllCustomers() //basic feature 1 (Keagan)
             {
                 Console.WriteLine();
@@ -799,7 +912,7 @@ namespace S10259842_PRG2Assignment
                     }
                 }
                 */
-                Order newOrder = selectedCustomer.MakeOrder();
+                Order newOrder = selectedCustomer.MakeOrder(GiveOrderID());
                 
                 while (true)
                 {
@@ -808,7 +921,7 @@ namespace S10259842_PRG2Assignment
 
                     int continueOption = 0;
 
-                    Console.Write("Would you like to add another order: "); //prompt user if they would like to continue
+                    Console.Write("Would you like to add another ice cream to the order: "); //prompt user if they would like to continue
 
                     continueOption = ProcessYesNo(Console.ReadLine());
 
@@ -1088,6 +1201,10 @@ namespace S10259842_PRG2Assignment
                     Console.WriteLine($"Final Bill: {totalBill:C}");
                     Console.WriteLine("Press any key to make payment. ");
                     Console.ReadLine();
+                    customer.CurrentOrder.TimeFulfilled = DateTime.Now;
+                    customer.OrderHistory.Add(currentOrder);
+                    customer.CurrentOrder = null; 
+                    
 
                     foreach (IceCream i in currentOrder.IceCreamList)
                     {
@@ -1110,93 +1227,9 @@ namespace S10259842_PRG2Assignment
 
 
 
-            //Read customers.csv and create corresponding IceCream objects and append to Order to customer
-            void ProcessOrdersCSV() 
-            {
-                Order newOrder = null;
-                using (StreamReader sR = new StreamReader("orders.csv"))  //Id,MemberId,TimeReceived,TimeFulfilled,Option,Scoops,Dipped,WaffleFlavour,Flavour1,Flavour2,Flavour3,Topping1,Topping2,Topping3,Topping4
-                {
-                    sR.ReadLine();
-                    string? line;
-                    IceCream iceCream = null;
-                    while ((line = sR.ReadLine()) != null)
-                    {
-                        string[] orderInfo = line.Split(",");
-                        double cost = 4;
+            
 
-                        List<Flavour> flavours = new List<Flavour>();
-                        List<Topping> toppings = new List<Topping>();
-                        string? Flavour1 = orderInfo[8];
-                          
-                        for (int i = 8; i < 11; i++) //Reads fields Flavour1-Flavour4
-                        {
-                            if (orderInfo[i] != "")
-                            {
-                                flavours.Add(CreateFlavour(orderInfo[i]));
-                            }
-
-                        }
-                        for (int i = 11; i < 15; i++) //Reads fields Topping1-Topping4
-                        {
-                            if (orderInfo[i] != "")
-                            {
-                                toppings.Add(new Topping(orderInfo[i]));
-                            }
-
-                        }
-
-                        // If blocks to create new IceCream object based on the option field
-                        if (orderInfo[4] == "Cup")
-                        {
-                            
-                            iceCream = new Cup(orderInfo[4], Convert.ToInt16(orderInfo[5]),flavours,toppings);
-                            //Console.WriteLine($"Cup is {iceCream.CalculatePrice()}");
-                        }
-                        else if (orderInfo[4] == "Cone")
-                        {
-                            bool dipped = Convert.ToBoolean(orderInfo[6]);
-                            iceCream = new Cone(orderInfo[4], Convert.ToInt16(orderInfo[5]), flavours, toppings, dipped);
-                            //Console.WriteLine($"Cone is {iceCream.CalculatePrice()}");
-                        }
-                        else
-                        {
-                            string waffleFlavour = orderInfo[7];
-                            iceCream = new Waffle(orderInfo[4], Convert.ToInt16(orderInfo[5]), flavours, toppings, waffleFlavour);
-                            //Console.WriteLine($"Waffle is {iceCream.CalculatePrice()}");
-
-                        }
-                        Dictionary<int,Order> orderDict = new Dictionary<int, Order>();
-
-
-                        int orderID = Convert.ToInt32(orderInfo[0]);
-                        // Doesn't use MakeOrder as its supposed to be in OrderHistory
-                        //
-                        if (orderDict.ContainsKey(orderID) == false)
-                        {
-                            orderDict[orderID] = new Order(Convert.ToInt16(orderInfo[0]), Convert.ToDateTime(orderInfo[2]));
-                            orderDict[orderID].TimeFulfilled = Convert.ToDateTime(orderInfo[3]);
-                            Customer customer = SearchCustomer(orderInfo[1]); //Prevents SearchCustomer from having Console.WriteLine("Customer found ...")
-                            
-                            customer.OrderHistory.Add(orderDict[orderID]);
-                        }
-                        orderDict[orderID].IceCreamList.Add(iceCream);
-
-
-
-                        /*
-                        newOrder = new Order(Convert.ToInt16(orderInfo[0]), Convert.ToDateTime(orderInfo[2]));
-                        newOrder.IceCreamList.Add( iceCream );
-                        newOrder.TimeFulfilled = Convert.ToDateTime(orderInfo[3]); */
-                        
-                        
-                    }
-                   
-                }
-                
-
-            }
-
-            ProcessOrdersCSV();
+            
 
             void DisplayChargedAmts() //advanced feature b (Jerald)
             {
@@ -1252,21 +1285,20 @@ namespace S10259842_PRG2Assignment
                         //Console.WriteLine($"{order}");
                         //Console.WriteLine($"CustomerID = {customer.MemberId}. OrderID = {order.Id}. Cost = {order.CalculateTotal()}.");
                         
+                        if (order.TimeFulfilled?.Year == year)
+                        {
+                            string key = order.TimeFulfilled?.ToString("MMMM yyyy");
 
-                        
-                        string key = order.TimeFulfilled?.ToString("MMMM yyyy");
-                        
-                        if (MonthCharged.ContainsKey(key))
-                        {
-                            //Console.WriteLine(key+ order.CalculateTotal+"hi");
-                            Console.WriteLine("Matched Total", key);
-                            MonthCharged[key] += order.CalculateTotal();
+                            if (MonthCharged.ContainsKey(key))
+                            {
+                                //Console.WriteLine(key+ order.CalculateTotal+"hi");
+                                //Console.WriteLine("Matched Total", key);
+                                MonthCharged[key] += order.CalculateTotal();
+                            }
+                            
                         }
-                        else
-                        {
-                            Console.WriteLine("Not Matched Total", key);
-                            MonthCharged.Add(key, order.CalculateTotal());
-                        }
+                        
+                        
 
                     }
                     

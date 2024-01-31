@@ -77,7 +77,7 @@ namespace S10259842_PRG2Assignment
 
         {
             CurrentOrder = new Order();
-            OrderHistory.Add(CurrentOrder);
+            //OrderHistory.Add(CurrentOrder);
            
             return CurrentOrder;
 
@@ -87,7 +87,7 @@ namespace S10259842_PRG2Assignment
         public Order MakeOrder(int orderId) //More full constructor of MakeOrder
         {
             CurrentOrder = new Order(orderId,DateTime.Now);
-            OrderHistory.Add(CurrentOrder);
+            //OrderHistory.Add(CurrentOrder);
 
             return CurrentOrder;
         }
