@@ -16,12 +16,17 @@ namespace S10259842_PRG2Assignment
 {
     class Order
     {
+        private int customerID;
         private int id;
         private DateTime timeReceived;
         private DateTime? timeFulfilled = null;
         private List<IceCream> iceCreamList = new List<IceCream>();
         
         private double amountCharged;
+
+
+        public int CustomerID
+        { get { return customerID; } set { customerID = value; } }
 
         public double AmountCharged
         { get { return amountCharged; } set { amountCharged = value; } }
